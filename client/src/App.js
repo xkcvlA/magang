@@ -52,7 +52,7 @@ function App() {
   const [status, setStatus] = useState('');
   const handleCheckStatus = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/checkStatus', { data: 'Hello from React' });
+      const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
       console.log('Response from server:', response.data);
       setStatus(response.data.status);  // Assuming server returns status
     } catch (error) {

@@ -5,6 +5,7 @@ const sql = require('mssql');
 const bodyParser = require('body-parser'); 
 const {shifts, getStatus}= require('./shifts');
 const theshift = shifts['shift1'];
+const {PythonShell} = require('python-shell');
 
 // Configuration for your SQL Server connection
 const config = {
@@ -72,10 +73,17 @@ app.post('/checkStatus', (req, res) => {
                         res.json(alalal);
                         alalal="";
                   });
-                  req.body.data= '';
-
-                  
+                  req.body.data= '';    
             }
+            PythonShell.run('recognition_offline.py', null, function (err, result) {
+                  if (err) {
+                    console.error('Error executing Python script:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                  } else {
+                    console.log('Result from Python script:', result);
+                    res.json({ message: 'Data received and processed successfully', result });
+                  }
+                });
             
           } catch (error) {
             console.error('Error checking status:', error);
