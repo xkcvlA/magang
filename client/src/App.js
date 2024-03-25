@@ -54,7 +54,11 @@ function App() {
     try {
       const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
       console.log('Response from server:', response.data);
-      setStatus(response.data.status);  // Assuming server returns status
+      axios.get('http://localhost:8080/yea')
+      .then(response=>{
+        setStatus(response.data)
+      })
+// Assuming server returns status
     } catch (error) {
       console.error('Error checking status:', error);
       setStatus('Error');
@@ -89,14 +93,14 @@ function importAll(r) {
       <div className="App-header">
         <DateTime />
         {/* <Camera className="camera"/> */}
-        <img src={'http://localhost:4444/video_feed'} alt="logo" />
+        {/* <img src={'http://localhost:4444/video_feed'} alt="logo" /> */}
       </div>
       <div className='id'>
         {<img src={selfo} alt={selper} className='image' />}
         <h2>Nama: {selper}</h2>
         <h2>NRP: {selid}</h2>
         <button onClick={handleCheckStatus}>Check Status</button>
-            {status && <p>Status: {status}</p>}
+          {status && <p>Status: {status}</p>}
       </div>
     </div>
   );

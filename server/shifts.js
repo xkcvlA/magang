@@ -31,4 +31,4 @@ function getStatus(theshift) {
   }
 
 
-module.exports = {shifts, getStatus};
+module.exports = {shifts, getStatus};

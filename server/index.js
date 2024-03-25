@@ -11,7 +11,7 @@ const {PythonShell} = require('python-shell');
 const config = {
   user: 'SA',
   password: 'a.mle_21',
-  server: '10.41.36.128',    // Change this to your SQL Server hostname
+  server: 'localhost',    // Change this to your SQL Server hostname
   port: 1433,             // Change this to your SQL Server port
   database: 'master', // Change this to your database name
   options: {
@@ -63,30 +63,22 @@ app.get('/', (req, res) => {
 app.use(cors());
 app.use(bodyParser.json());
 app.post('/checkStatus', (req, res) => {
-      try {
-            const { data } = req.body;
-            console.log('Received data:', data);
-            res.json({ message: 'Data received and processed successfully' });
-            if(req.body.data){
-                  app.get('/yea', async(req, res)=>{
-                        let alalal = getStatus(theshift); 
-                        res.json(alalal);
-                        alalal="";
-                  });
-                  req.body.data= '';    
-            }
-            PythonShell.run('recognition_offline.py', null, function (err, result) {
-                  if (err) {
-                    console.error('Error executing Python script:', err);
-                    res.status(500).json({ error: 'Internal Server Error' });
-                  } else {
-                    console.log('Result from Python script:', result);
-                    res.json({ message: 'Data received and processed successfully', result });
-                  }
-                });
-            
-          } catch (error) {
-            console.error('Error checking status:', error);
-            res.status(500).json({ error: 'Internal Server Error' }); // Send an error response
-          }
-  });
+  try {
+        const { data } = req.body;
+        console.log('Received data:', data);
+        res.json({ message: 'Data received and processed successfully' });
+        if(req.body.data){
+              app.get('/yea', async(req, res)=>{
+                    let alalal = getStatus(theshift); 
+                    res.json(alalal);
+                    alalal="";
+              });
+              req.body.data= '';
+              
+        }
+        
+      } catch (error) {
+        console.error('Error checking status:', error);
+        res.status(500).json({ error: 'Internal Server Error' }); // Send an error response
+         }
+  });
