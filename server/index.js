@@ -11,7 +11,7 @@ const {PythonShell} = require('python-shell');
 const config = {
   user: 'SA',
   password: 'a.mle_21',
-  server: 'localhost',    // Change this to your SQL Server hostname
+  server: '10.41.36.128',    // Change this to your SQL Server hostname
   port: 1433,             // Change this to your SQL Server port
   database: 'master', // Change this to your database name
   options: {

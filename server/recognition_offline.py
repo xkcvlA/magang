@@ -1,23 +1,10 @@
+import cv2
 import face_recognition
 import os, sys
-import cv2
+from datetime import datetime
 import numpy as np
 import math
-from datetime import datetime
-import time
 
-# Helper
-def face_confidence(face_distance, face_match_threshold=0.8):
-    range = (1.2 - face_match_threshold)
-    linear_val = (1.0 - face_distance) / (range * 2.0)
-
-    if face_distance > face_match_threshold:
-        return (round(linear_val * 100, 2)) 
-    else:
-        value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
-        print(value)
-        return (round(value, 2)) 
-        
 class FaceRecognition:
     face_locations = []
     face_encodings = []
@@ -43,17 +30,12 @@ class FaceRecognition:
         
         print(self.known_face_names)
 
-
-    def upload_image(self, image):
-        # Your image uploading logic goes here
-        timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-        filename = f'unknown_person_{timestamp}.png'
-
-
-        pass
+    # def upload_image(self, image):
+    #     # Your image uploading logic goes here
+    #     timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    #     filename = f'unknown_person_{timestamp}.png'
 
     def run_recognition(self):
-    # Change the index to the appropriate one for your PC camera
         video_capture = cv2.VideoCapture(0)
     
         if not video_capture.isOpened():
@@ -61,65 +43,43 @@ class FaceRecognition:
         
         while True:
             ret, frame = video_capture.read()
-            # Only process every other frame of video to save time
             if self.process_current_frame:
-                # Resize frame of video to 1/4 size for faster face recognition processing
                 small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-
-                # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
                 rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
-
-                # Find all the faces and face encodings in the current frame of video
                 self.face_locations = face_recognition.face_locations(rgb_small_frame)
                 self.face_encodings = face_recognition.face_encodings(rgb_small_frame, self.face_locations)
-
                 self.face_names = []
-                for face_encoding in self.face_encodings:
-                    # See if the face is a match for the known face(s)
+                for face_encoding, (top, right, bottom, left) in zip(self.face_encodings, self.face_locations):
                     matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
                     name = "Unknown"
                     confidence = '???'
-
-                    # Calculate the shortest distance to face
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
-
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
                         face_distance = face_distances[best_match_index]
                         if face_distance < 0.9:
-                            confi = face_confidence(face_distance)
-                            if confi > 95:  # Checking if the confidence is above 95% (0.05 is an example threshold)
+                            confi = self.face_confidence(face_distance)
+                            if confi > 95:
                                 name = self.known_face_names[best_match_index]
-                                confidence = face_confidence(face_distances[best_match_index])
+                                confidence = self.face_confidence(face_distances[best_match_index])
+                                # Draw a red frame around the face
+                    cv2.rectangle(frame, (left * 4, top * 4), (right * 4, bottom * 4), (0, 0, 255), 2)
+                    # Display the name and confidence
+                    cv2.putText(frame, f'{name} ({confidence}%)', (left * 4, bottom * 4 + 20),
+                                cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+
                     self.face_names.append(f'{name} ({confidence})')
 
             self.process_current_frame = not self.process_current_frame
- 
-            # Display the results
-            for (top, right, bottom, left), name in zip(self.face_locations, self.face_names):
-                # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-                top *= 4
-                right *= 4
-                bottom *= 4
-                left *= 4
+            yield frame  # Return the processed frame
 
-                # Create the frame with the name
-                cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-                cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+    def face_confidence(self, face_distance, face_match_threshold=0.8):
+        range_val = (1.2 - face_match_threshold)
+        linear_val = (1.0 - face_distance) / (range_val * 2.0)
 
-            # Display the resulting image
-            cv2.imshow('Face Recognition', frame)
+        if face_distance > face_match_threshold:
+            return round(linear_val * 100, 2) 
+        else:
+            value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
+            return round(value, 2) 
 
-            # Hit 'q' on the keyboard to quit!
-            if cv2.waitKey(1) == ord('q'):
-                break
-
-        # Release handle to the webcam
-        video_capture.release()
-        cv2.destroyAllWindows()
-
-
-if __name__ == '__main__':
-    fr = FaceRecognition()
-    fr.run_recognition()
