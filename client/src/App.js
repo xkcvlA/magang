@@ -91,6 +91,11 @@ function importAll(r) {
   return (
     <div class="App">
       <div class="App-header">
+        <div>
+          <header>
+            <img src={'tes.jpg'}></img>
+          </header>
+        </div>
         <DateTime />
         {/* <Camera className="camera"/> */}
         {/* <img src={'http://localhost:4444/video_feed'} alt="logo" /> */}
