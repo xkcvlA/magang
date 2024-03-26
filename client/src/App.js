@@ -89,14 +89,14 @@ function importAll(r) {
 
   console.log("tes: ", status)
   return (
-    <div className="App">
-      <div className="App-header">
+    <div class="App">
+      <div class="App-header">
         <DateTime />
         {/* <Camera className="camera"/> */}
         {/* <img src={'http://localhost:4444/video_feed'} alt="logo" /> */}
       </div>
-      <div className='id'>
-        {<img src={selfo} alt={selper} className='image' />}
+      <div class='id'>
+        {<img src={selfo} alt={selper} class='image' />}
         <h2>Nama: {selper}</h2>
         <h2>NRP: {selid}</h2>
         <button onClick={handleCheckStatus}>Check Status</button>
