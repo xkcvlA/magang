@@ -81,7 +81,7 @@ function importAll(r) {
   r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
   return images;
 }
-  const images = importAll(require.context('./foto', false, /\.(jpg|jpeg|png)$/));
+  const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
   const filter = data.find(item => item.NRP === "1105");
   const selper = filter ? filter.NAMA : []; // Check if filter is defined
   const selid = filter ? filter.NRP : []; // Check if filter is defined
