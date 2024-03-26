@@ -50,6 +50,8 @@ const Camera = () => {
 function App() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
+  const [frnrp, setFrnrp] = useState(''); 
+
   const handleCheckStatus = async () => {
     try {
       const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
@@ -75,6 +77,17 @@ function App() {
       });
   },[]);
 
+  useEffect(() => {
+    axios.get('http://localhost:4444')
+      .then(response => {
+        setFrnrp(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  },[]);
+
+
 //function to import images
 function importAll(r) {
   let images = {};
@@ -98,12 +111,13 @@ function importAll(r) {
         </div>
         <DateTime />
         {/* <Camera className="camera"/> */}
-        {/* <img src={'http://localhost:4444/video_feed'} alt="logo" /> */}
+        <img src={'http://localhost:4444/video_feed'} alt="logo" />
       </div>
       <div class='id'>
         {<img src={selfo} alt={selper} class='image' />}
         <h2>Nama: {selper}</h2>
         <h2>NRP: {selid}</h2>
+        <h2>{frnrp}</h2>
         <button onClick={handleCheckStatus}>Check Status</button>
           {status && <p>Status: {status}</p>}
       </div>
