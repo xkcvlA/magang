@@ -8,7 +8,7 @@ def capture_image(filename):
 
     webcam.release() # matikan webcam
 
-    folder = "foto" # declare folder penyimpanan
+    folder = "faces" # declare folder penyimpanan
     os.makedirs(folder, exist_ok=True) # kalau blm ada folder nanti dibuat otomatis
     
     filepath = os.path.join(folder, filename) # File storage location and naming

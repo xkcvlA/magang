@@ -52,9 +52,13 @@ function App() {
   const [status, setStatus] = useState('');
   const handleCheckStatus = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/checkStatus', { data: 'Hello from React' });
+      const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
       console.log('Response from server:', response.data);
-      setStatus(response.data.status);  // Assuming server returns status
+      axios.get('http://localhost:8080/yea')
+      .then(response=>{
+        setStatus(response.data)
+      })
+// Assuming server returns status
     } catch (error) {
       console.error('Error checking status:', error);
       setStatus('Error');
@@ -77,7 +81,7 @@ function importAll(r) {
   r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
   return images;
 }
-  const images = importAll(require.context('./foto', false, /\.(jpg|jpeg|png)$/));
+  const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
   const filter = data.find(item => item.NRP === "1105");
   const selper = filter ? filter.NAMA : []; // Check if filter is defined
   const selid = filter ? filter.NRP : []; // Check if filter is defined
@@ -85,18 +89,23 @@ function importAll(r) {
 
   console.log("tes: ", status)
   return (
-    <div className="App">
-      <div className="App-header">
+    <div class="App">
+      <div class="App-header">
+        <div>
+          <header>
+            <img src={'tes.jpg'}></img>
+          </header>
+        </div>
         <DateTime />
         {/* <Camera className="camera"/> */}
-        <img src={'http://localhost:4444/video_feed'} alt="logo" />
+        {/* <img src={'http://localhost:4444/video_feed'} alt="logo" /> */}
       </div>
-      <div className='id'>
-        {<img src={selfo} alt={selper} className='image' />}
+      <div class='id'>
+        {<img src={selfo} alt={selper} class='image' />}
         <h2>Nama: {selper}</h2>
         <h2>NRP: {selid}</h2>
         <button onClick={handleCheckStatus}>Check Status</button>
-            {status && <p>Status: {status}</p>}
+          {status && <p>Status: {status}</p>}
       </div>
     </div>
   );
