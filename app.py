@@ -27,7 +27,8 @@ def process_recognition_results():
     
     while True:
         time.sleep(0.1)  # Adjust the sleep time as needed
-        current_results = fr.get_current_results()
+        # Access necessary attributes directly from the FaceRecognition object
+        current_results = fr.face_names
         if len(set(current_results)) == 1:
             last_result_time = time.time()
 
