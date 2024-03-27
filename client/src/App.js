@@ -1,7 +1,8 @@
 import axios from 'axios';
 import './App.css';
-import DateTime from './datetime';
 import React, { useState, useEffect, useRef } from 'react';
+import logo from './logo.png';
+
 
 // Camera component
 const Camera = () => {
@@ -58,13 +59,28 @@ function App() {
       .then(response=>{
         setStatus(response.data)
       })
-// Assuming server returns status
+    // Assuming server returns status
     } catch (error) {
       console.error('Error checking status:', error);
       setStatus('Error');
     }
   };
+  // date
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  };
+  var [date,setDate] = useState(new Date());
   
+  useEffect(() => {
+      var timer = setInterval(()=>setDate(new Date()), 1000 )
+      return function cleanup() {
+          clearInterval(timer)
+      }
+  });
+
   useEffect(() => {
     axios.get('http://localhost:8080/getData')
       .then(response => {
@@ -89,24 +105,27 @@ function importAll(r) {
 
   console.log("tes: ", status)
   return (
-    <div class="App">
-      <div class="App-header">
-        <div>
-          <header>
-            <img src={'tes.jpg'}></img>
-          </header>
+    <div className='app'>
+      <div className='app-top'>
+        <div className='logo-container'>
+          <img src={logo} alt='logo' className='logo' />
         </div>
-        <DateTime />
-        {/* <Camera className="camera"/> */}
-        {/* <img src={'http://localhost:4444/video_feed'} alt="logo" /> */}
+        <div className='date-container'>
+          <p className='date'>{date.toLocaleDateString('id-ID', options)}</p>
+        </div>
       </div>
-      <div class='id'>
-        {<img src={selfo} alt={selper} class='image' />}
-        <h2>Nama: {selper}</h2>
-        <h2>NRP: {selid}</h2>
-        <button onClick={handleCheckStatus}>Check Status</button>
-          {status && <p>Status: {status}</p>}
+      <div className='body-cont'>
+        <div className='time-cont'>
+          <p className='time'>{date.toLocaleTimeString()}</p>
+        </div>
       </div>
+      <div className='id'>
+          {<img src={'./src/faces/29.jpg'} alt={selper} className='foto' />}
+          <h2>Nama: {selper}</h2>
+          <h2>NRP: {selid}</h2>
+          <button onClick={handleCheckStatus}>Check Status</button>
+            {status && <p>Status: {status}</p>}
+        </div>
     </div>
   );
 }

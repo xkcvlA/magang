@@ -1,11 +1,58 @@
-.App {
-  text-align: center;
-  background-color: #ffffff;
-  width: 100%;
-  display: flex;
+.app {
+  align-items: center; /* Center items vertically */
 }
 
-.App-header {
+.app-top {
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  width: 100%;
+  float: left;
+}
+
+.logo-container {
+  margin-right: auto; /* Add some margin to the right of the image */
+  width: max-content;
+  align-items: center;
+}
+
+.logo {
+  padding: 15%;
+  width: 150px; /* Adjust the width of the image as needed */
+}
+
+.date-container {
+  display: flex; /* Use flexbox for layout */
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.date {
+  padding-right: 25px;
+  font-size: 20px;
+  color: #1B1A55;
+}
+
+.time-cont {
+  display: flex; /* Use flexbox for layout */
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.time {
+  padding: 15px;
+  font-size: 50px;
+  color: #007F73;
+}
+
+.camera {
+  width: 320px; /* Atur lebar video */
+  height: 240px; /* Atur tinggi video */
+}
+
+.body-cont {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,32 +63,13 @@
   float: left;
 }
 
-.date {
-  align-self: center;
-  color: rgb(0, 0, 255);
-  font-size: 18px;
-  line-height: 0;
-  margin-left: 90px;
-  text-align: left;
-}
-
-.time {
-  color: rgb(0, 255, 0);
-  font-size: 120px;
-  line-height: 1;
-  margin: 20px;
-  margin-top: auto;
-  align-self: center;
-}
-
-.camera {
-  width: 320px; /* Atur lebar video */
-  height: 240px; /* Atur tinggi video */
+.foto {
+  padding: 15%;
+  width: 150px; /* Adjust the width of the image as needed */
 }
 
 .id{
-  width: 50%;
   height: auto;
-  float: right;
-  align-self: center;
+  float: left;
+  align-self: flex-start;
 }
