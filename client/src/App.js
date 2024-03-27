@@ -101,7 +101,7 @@ function importAll(r) {
   const filter = data.find(item => item.NRP === "1105");
   const selper = filter ? filter.NAMA : []; // Check if filter is defined
   const selid = filter ? filter.NRP : []; // Check if filter is defined
-  const selfo = selper ? images[`${selper}.png`] : null;
+  const selfo = selper ? images[`${selper}.jpg`] : null;
 
   console.log("tes: ", status)
   return (
@@ -117,15 +117,16 @@ function importAll(r) {
       <div className='body-cont'>
         <div className='time-cont'>
           <p className='time'>{date.toLocaleTimeString()}</p>
+          <Camera className="camera"/>
         </div>
       </div>
       <div className='id'>
-          {<img src={'./src/faces/29.jpg'} alt={selper} className='foto' />}
-          <h2>Nama: {selper}</h2>
-          <h2>NRP: {selid}</h2>
-          <button onClick={handleCheckStatus}>Check Status</button>
-            {status && <p>Status: {status}</p>}
-        </div>
+        {<img src={selfo} alt={selper} className='foto' />}
+        <h2>Nama: {selper}</h2>
+        <h2>NRP: {selid}</h2>
+        <button onClick={handleCheckStatus}>Check Status</button>
+          {status && <p>Status: {status}</p>}
+      </div>
     </div>
   );
 }

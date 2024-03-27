@@ -48,8 +48,9 @@
 }
 
 .camera {
-  width: 320px; /* Atur lebar video */
-  height: 240px; /* Atur tinggi video */
+  width: 32px; /* Atur lebar video */
+  height: 24px; /* Atur tinggi video */
+align-self: flex-start;
 }
 
 .body-cont {
@@ -64,8 +65,8 @@
 }
 
 .foto {
-  padding: 15%;
   width: 150px; /* Adjust the width of the image as needed */
+  height: auto;
 }
 
 .id{
