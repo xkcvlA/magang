@@ -1,13 +1,17 @@
 .app {
   align-items: center; /* Center items vertically */
+  overflow: hidden;
 }
 
 .app-top {
   display: flex;
   align-items: left;
-  justify-content: center;
-  width: 100%;
-  float: left;
+  justify-content: space-between;
+  width: auto;
+  /* float: left; */
+  border-block-end: solid; 
+  writing-mode: horizontal-tb;
+  border-color: red;
 }
 
 .logo-container {
@@ -22,10 +26,8 @@
 }
 
 .date-container {
-  display: flex; /* Use flexbox for layout */
   align-items: center;
   flex-direction: row;
-  flex-wrap: wrap;
 }
 
 .date {
@@ -34,30 +36,42 @@
   color: #1B1A55;
 }
 
-.time-cont {
+.fr-cont { /* untuk waktu, camera, dan tulisan dibawahnya */
   display: flex; /* Use flexbox for layout */
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
+  /* margin-top: -120px; */
 }
 
 .time {
-  padding: 15px;
+  /* padding: 15px; */
   font-size: 50px;
   color: #007F73;
+  font-weight: bold;
 }
 
-.camera {
-  width: 32px; /* Atur lebar video */
-  height: 24px; /* Atur tinggi video */
-align-self: flex-start;
+
+.text {
+  font-size: medium;
+  color: red;
+  font-weight: bold;
+  /* align-self: center; */
+}
+
+.camera-cont {
+  width: 100%;
+  height: 75%;
+  position: relative;
+  overflow: hidden;
+  padding-left: 20px;
 }
 
 .body-cont {
-  min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-content: center;
   justify-content: center;
   font-size: calc(20px + 2vmin);
   width: 50%;
@@ -67,10 +81,12 @@ align-self: flex-start;
 .foto {
   width: 150px; /* Adjust the width of the image as needed */
   height: auto;
+  aspect-ratio: auto;
 }
 
 .id{
   height: auto;
   float: left;
   align-self: flex-start;
+  flex-direction: column;
 }

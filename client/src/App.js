@@ -115,9 +115,12 @@ function importAll(r) {
         </div>
       </div>
       <div className='body-cont'>
-        <div className='time-cont'>
+        <div className='fr-cont'>
           <p className='time'>{date.toLocaleTimeString()}</p>
-          <Camera className="camera"/>
+          <div className='camera-cont'>
+            <Camera className='camera' autoPlay/>
+          </div>
+          <p className='text'>Arahkan muka anda ke kamera</p>
         </div>
       </div>
       <div className='id'>
