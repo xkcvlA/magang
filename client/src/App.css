@@ -1,6 +1,7 @@
 .app {
   align-items: center; /* Center items vertically */
   overflow: hidden;
+  flex-direction: row;
 }
 
 .app-top {
@@ -73,7 +74,6 @@
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  font-size: calc(20px + 2vmin);
   width: 50%;
   float: left;
 }
@@ -84,9 +84,17 @@
   aspect-ratio: auto;
 }
 
-.id{
+.body-cont2 {
   height: auto;
-  float: left;
-  align-self: flex-start;
+  display: flex;
   flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  width: 50%;
+  float: left;
+}
+
+.id {
+  font-size: medium;
+  color: rgb(0, 0, 0);
 }

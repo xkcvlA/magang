@@ -123,12 +123,14 @@ function importAll(r) {
           <p className='text'>Arahkan muka anda ke kamera</p>
         </div>
       </div>
-      <div className='id'>
-        {<img src={selfo} alt={selper} className='foto' />}
-        <h2>Nama: {selper}</h2>
-        <h2>NRP: {selid}</h2>
-        <button onClick={handleCheckStatus}>Check Status</button>
-          {status && <p>Status: {status}</p>}
+      <div className='body-cont2'>
+        <div className='id'>
+          {<img src={selfo} alt={selper} className='foto' />}
+          <h2>Nama: {selper}</h2>
+          <h2>NRP: {selid}</h2>
+          <button onClick={handleCheckStatus}>Check Status</button>
+            {status && <p>Status: {status}</p>}
+        </div>
       </div>
     </div>
   );
