@@ -1,7 +1,6 @@
 import cv2
 import face_recognition
 import os, sys
-from datetime import datetime
 import numpy as np
 import math
 
@@ -31,11 +30,6 @@ class FaceRecognition:
         
         print(self.known_face_names)
 
-    # def upload_image(self, image):
-    #     # Your image uploading logic goes here
-    #     timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    #     filename = f'unknown_person_{timestamp}.png'
-
     def run_recognition(self):
         video_capture = cv2.VideoCapture(0)
     
@@ -61,19 +55,20 @@ class FaceRecognition:
                         if face_distance < 0.9:
                             confi = self.face_confidence(face_distance)
                             if confi > 90:
-                                name = self.known_face_names[best_match_index]
+                                imgname = self.known_face_names[best_match_index]
+                                name = imgname.split('.')[0]
                                 confidence = self.face_confidence(face_distances[best_match_index])
                                 # Draw a red frame around the face
+                    self.face_names.append(f'{name} ({confidence})')
+                    self.the_name = name
                     cv2.rectangle(frame, (left * 4, top * 4), (right * 4, bottom * 4), (0, 0, 255), 2)
                     # Display the name and confidence
                     cv2.putText(frame, f'{name} ({confidence}%)', (left * 4, bottom * 4 + 20),
                                 cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
-
-                    self.face_names.append(f'{name} ({confidence})')
-                    self.the_name = name
             self.process_current_frame = not self.process_current_frame
             yield frame  # Return the processed frame
-            self.the_name = ""
+            if not self.face_names:  # If no faces detected
+                self.the_name = ""
 
     def face_confidence(self, face_distance, face_match_threshold=0.8):
         range_val = (1.2 - face_match_threshold)
@@ -84,4 +79,3 @@ class FaceRecognition:
         else:
             value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
             return round(value, 2) 
-
