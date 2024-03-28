@@ -48,7 +48,7 @@ function App() {
 
   useEffect(() => {
     axios.get('http://localhost:8080/getData')
-      .then(response => {
+      .then(response => { 
         setData(response.data);
       })
       .catch(error => {
@@ -101,14 +101,14 @@ function importAll(r) {
         </div>
       </div>
       <div className='body-cont2'>
+        <img src={"./a.png"} alt={selper} className='foto' />
         <div className='id'>
-          {<img src={selfo} alt={selper} className='foto' />}
           <h2>Nama: {selper}</h2>
           <h2>NRP: {frnrp}</h2>
           <h2>Status: {status}</h2>
-          {/* <button onClick={handleCheckStatus}>Check Status</button> */}
-            {/* {status && <p>Status: {status}</p>} */}
         </div>
+      {/* <button onClick={handleCheckStatus}>Check Status</button> */}
+        {/* {status && <p>Status: {status}</p>} */}
       </div>
     </div>
   );
