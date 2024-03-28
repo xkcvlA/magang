@@ -37,6 +37,16 @@
   color: #1B1A55;
 }
 
+.body-cont {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  width: 50%;
+  float: left;
+}
+
 .fr-cont { /* untuk waktu, camera, dan tulisan dibawahnya */
   display: flex; /* Use flexbox for layout */
   align-items: center;
@@ -68,7 +78,7 @@
   padding-left: 20px;
 }
 
-.body-cont {
+.body-cont2 {
   height: auto;
   display: flex;
   flex-direction: column;
@@ -82,16 +92,6 @@
   width: 150px; /* Adjust the width of the image as needed */
   height: auto;
   aspect-ratio: auto;
-}
-
-.body-cont2 {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  width: 50%;
-  float: left;
 }
 
 .id {

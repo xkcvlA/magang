@@ -2,6 +2,7 @@ import axios from 'axios';
 import './App.css';
 import React, { useState, useEffect, useRef } from 'react';
 import logo from './logo.png';
+import a from './a.png';
 
 //data will be the string we send from our server
 function App() {
@@ -101,6 +102,7 @@ function importAll(r) {
         </div>
       </div>
       <div className='body-cont2'>
+        <img src={a} alt="non" className='foto' />
         <img src={selfo} alt={selper} className='foto' />
         <div className='id'>
           <h2>Nama: {selper}</h2>
