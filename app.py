@@ -18,13 +18,15 @@ def generate_frames():
 @app.route('/video_feed', methods=['GET'])
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    
-@app.route('/', methods=['GET'])
-def sendstuff():
-    printed_name = fr.the_name
-    time.sleep(2)
-    print(printed_name)
-    return str(printed_name)
+
+@app.route('/check', methods=['GET'])
+def stream_data():
+    def sendstuff():
+        while True:
+            yield f"data: {fr.the_name}\n\n"
+            time.sleep(0.1)
+            
+    return Response(sendstuff(), mimetype='text/event-stream')
 
 if __name__ == '__main__':
     host = "localhost"
