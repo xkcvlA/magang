@@ -97,14 +97,7 @@
 .id {
   font-size: medium;
   color: rgb(0, 0, 0);
-}
-
-.status-box {
-  width: 100px; /* Adjust width as needed */
-  height: 50px; /* Adjust height as needed */
-  background-color: transparent; /* Initially set as transparent */
-  border: 2px solid transparent; /* Initially set as transparent */
-  border-radius: 5px; /* Adjust border-radius as needed */
+  align-self: center;
 }
 
 .check-in {

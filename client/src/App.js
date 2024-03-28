@@ -127,18 +127,25 @@ function importAll(r) {
         </div>
       </div>
       <div className='body-cont2'>
-        {/* <img src={a} alt="non" className='foto' /> */}
         <img src={selfo} alt={selper} className='foto' />
         <div className='id'>
           <h2>Nama: {selper}</h2>
           <h2>NRP: {selid}</h2>
           <h2>Status: {status}</h2>
         </div>
-      {/* <button onClick={handleCheckStatus}>Check Status</button> */}
-        {/* {status && <p>Status: {status}</p>} */}
+        {status === "check in" && (
+          <div className="check-in">
+            <p style={{ color: "white" }}>Welcome, {selper}!</p>
+          </div>
+        )}
+        {status === "check out" && (
+          <div className="check-out">
+            <p style={{ color: "black" }}>Thank you, {selper}!</p>
+          </div>
+        )}
       </div>
-    </div>
-  );
+    </div>
+  );
 }
 
 export default App;
