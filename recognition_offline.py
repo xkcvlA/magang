@@ -1,7 +1,6 @@
 import cv2
 import face_recognition
 import os, sys
-from datetime import datetime
 import numpy as np
 import math
 
@@ -30,11 +29,6 @@ class FaceRecognition:
                 print(f"No face detected in {image}. Skipping...")
         
         print(self.known_face_names)
-
-    # def upload_image(self, image):
-    #     # Your image uploading logic goes here
-    #     timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    #     filename = f'unknown_person_{timestamp}.png'
 
     def run_recognition(self):
         video_capture = cv2.VideoCapture(0)

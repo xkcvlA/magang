@@ -23,7 +23,6 @@ def video_feed():
 def stream_data():
     def sendstuff():
         while True:
-            print(fr.the_name)
             yield f"data: {fr.the_name}\n\n"
             time.sleep(0.1)
             
@@ -36,5 +35,3 @@ if __name__ == '__main__':
     options = None
 
     app.run(host, port, debug, options)
-
-#apa

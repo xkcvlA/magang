@@ -103,9 +103,13 @@
 .check-in {
   background-color: green; /* Color for check-in status */
   border-color: green; /* Border color for check-in status */
+  padding: 10px;
+  margin-top: 10px;
 }
 
 .check-out {
   background-color: orange;
   border-color: orange;
+  padding: 10px;
+  margin-top: 10px;
 }
