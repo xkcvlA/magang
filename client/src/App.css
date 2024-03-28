@@ -1,47 +1,118 @@
-.App {
-  text-align: center;
-  background-color: #ffffff;
-  width: 100%;
-  display: flex;
+.app {
+  align-items: center; /* Center items vertically */
+  overflow: hidden;
+  flex-direction: row;
 }
 
-.App-header {
-  min-height: 100vh;
+.app-top {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  width: auto;
+  /* float: left; */
+  border-block-end: solid; 
+  writing-mode: horizontal-tb;
+  border-color: red;
+}
+
+.logo-container {
+  margin-right: auto; /* Add some margin to the right of the image */
+  width: max-content;
+  align-items: center;
+}
+
+.logo {
+  padding: 15%;
+  width: 150px; /* Adjust the width of the image as needed */
+}
+
+.date-container {
+  align-items: center;
+  flex-direction: row;
+}
+
+.date {
+  padding-right: 25px;
+  font-size: 20px;
+  color: #1B1A55;
+}
+
+.body-cont {
+  height: auto;
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-content: center;
   justify-content: center;
-  font-size: calc(20px + 2vmin);
   width: 50%;
   float: left;
 }
 
-.date {
-  align-self: center;
-  color: rgb(0, 0, 255);
-  font-size: 18px;
-  line-height: 0;
-  margin-left: 90px;
-  text-align: left;
+.fr-cont { /* untuk waktu, camera, dan tulisan dibawahnya */
+  display: flex; /* Use flexbox for layout */
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  /* margin-top: -120px; */
 }
 
 .time {
-  color: rgb(0, 255, 0);
-  font-size: 120px;
-  line-height: 1;
-  margin: 20px;
-  margin-top: auto;
-  align-self: center;
+  /* padding: 15px; */
+  font-size: 50px;
+  color: #007F73;
+  font-weight: bold;
 }
 
-.camera {
-  width: 320px; /* Atur lebar video */
-  height: 240px; /* Atur tinggi video */
+
+.text {
+  font-size: medium;
+  color: red;
+  font-weight: bold;
+  /* align-self: center; */
 }
 
-.id{
-  width: 50%;
+.camera-cont {
+  width: 100%;
+  height: 75%;
+  position: relative;
+  overflow: hidden;
+  padding-left: 20px;
+}
+
+.body-cont2 {
   height: auto;
-  float: right;
-  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  width: 50%;
+  float: left;
+}
+
+.foto {
+  width: 150px; /* Adjust the width of the image as needed */
+  height: auto;
+  aspect-ratio: auto;
+}
+
+.id {
+  font-size: medium;
+  color: rgb(0, 0, 0);
+}
+
+.status-box {
+  width: 100px; /* Adjust width as needed */
+  height: 50px; /* Adjust height as needed */
+  background-color: transparent; /* Initially set as transparent */
+  border: 2px solid transparent; /* Initially set as transparent */
+  border-radius: 5px; /* Adjust border-radius as needed */
+}
+
+.check-in {
+  background-color: green; /* Color for check-in status */
+  border-color: green; /* Border color for check-in status */
+}
+
+.check-out {
+  background-color: orange;
+  border-color: orange;
 }
