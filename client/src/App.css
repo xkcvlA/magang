@@ -79,7 +79,7 @@
 }
 
 .body-cont2 {
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -88,10 +88,25 @@
   float: left;
 }
 
+.body-3 {
+  height: 50%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.body-4 {
+  height: 50%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
 .foto {
   width: 150px; /* Adjust the width of the image as needed */
   height: auto;
   aspect-ratio: auto;
+  align-self: center;
 }
 
 .id {
@@ -101,8 +116,8 @@
 }
 
 .check-in {
-  background-color: green; /* Color for check-in status */
-  border-color: green; /* Border color for check-in status */
+  background-color: rgb(17, 213, 17); /* Color for check-in status */
+  border-color: rgb(17, 213, 17); /* Border color for check-in status */
   padding: 10px;
   margin-top: 10px;
 }
@@ -112,4 +127,9 @@
   border-color: orange;
   padding: 10px;
   margin-top: 10px;
+}
+
+.check {
+  font-weight: bold;
+  color: black;
 }

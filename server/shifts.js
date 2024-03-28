@@ -5,14 +5,14 @@ const shifts = {
         checkOut: ['16:00', '18:00'],
     },
     shift2: {
-        checkIn: ['10:00', '12:00'],
+        checkIn: ['10:00', '16:00'],
         checkOut: ['23:00', '01:00'],
     },
     shift3: {
         checkIn: ['23:00', '01:00'],
         checkOut: ['16:00', '18:00'],
     },
-    nonshift: {
+    shift4: {
         checkIn: ['07:00', '09:00'],
         checkOut: ['16:00', '18:00'],
     },

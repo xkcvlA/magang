@@ -1,6 +1,6 @@
 import axios from 'axios';
 import './App.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import logo from './logo.png';
 
 //data will be the string we send from our server
@@ -104,22 +104,26 @@ function importAll(r) {
         </div>
       </div>
       <div className='body-cont2'>
-        <img src={selfo} alt={selper} className='foto' />
-        <div className='id'>
-          <h2>Nama: {selper}</h2>
-          <h2>NRP: {selid}</h2>
-          <h2>Status: {status}</h2>
+        <div className='body-3'>
+          <img src={selfo} alt={selper} className='foto' />
         </div>
-        {status === "checkIn" && (
-          <div className="check-in">
-            <p style={{ color: "white" }}>Welcome, {selper}!</p>
+        <div className='body-4'>
+          <div className='id'>
+            <h2>Nama: {selper}</h2>
+            <h2>NRP: {selid}</h2>
+            <h2>Status: {status}</h2>
+              {status === "Check in" && (
+                <div className="check-in">
+                  <p className='check'>Welcome, {selper}!</p>
+                </div>
+              )}
+              {status === "Check out" && (
+                <div className="check-out">
+                  <p className='check'>Thank you, {selper}!</p>
+                </div>
+              )}
           </div>
-        )}
-        {status === "checkOut" && (
-          <div className="check-out">
-            <p style={{ color: "black" }}>Thank you, {selper}!</p>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
