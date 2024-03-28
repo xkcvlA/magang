@@ -4,53 +4,54 @@ import React, { useState, useEffect, useRef } from 'react';
 import logo from './logo.png';
 
 
-// Camera component
-const Camera = () => {
-  const videoRef = useRef(null);
-  const [error, setError] = useState(null);
-//meow
-  useEffect(() => {
-    const constraints = {
-      video: true
-    };
+// // Camera component
+// const Camera = () => {
+//   const videoRef = useRef(null);
+//   const [error, setError] = useState(null);
+// //meow
+//   useEffect(() => {
+//     const constraints = {
+//       video: true
+//     };
 
-    const handleSuccess = (stream) => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    };
+//     const handleSuccess = (stream) => {
+//       if (videoRef.current) {
+//         videoRef.current.srcObject = stream;
+//       }
+//     };
 
-    const handleError = (err) => {
-      setError(err.message || 'Failed to access the camera.');
-    };
+//     const handleError = (err) => {
+//       setError(err.message || 'Failed to access the camera.');
+//     };
 
-    navigator.mediaDevices.getUserMedia(constraints)
-      .then(handleSuccess)
-      .catch(handleError);
+//     navigator.mediaDevices.getUserMedia(constraints)
+//       .then(handleSuccess)
+//       .catch(handleError);
 
-    return () => {
-      if (videoRef.current) {
-        const stream = videoRef.current.srcObject;
-        if (stream) {
-          const tracks = stream.getTracks();
-          tracks.forEach(track => track.stop());
-        }
-      }
-    };
-  }, []);
+//     return () => {
+//       if (videoRef.current) {
+//         const stream = videoRef.current.srcObject;
+//         if (stream) {
+//           const tracks = stream.getTracks();
+//           tracks.forEach(track => track.stop());
+//         }
+//       }
+//     };
+//   }, []);
 
-  return (
-    <div>
-      {error && <div>Error: {error}</div>}
-      <video ref={videoRef} autoPlay playsInline />
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       {error && <div>Error: {error}</div>}
+//       <video ref={videoRef} autoPlay playsInline />
+//     </div>
+//   );
+// };
 
 //data will be the string we send from our server
 function App() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
+<<<<<<< HEAD
   const handleCheckStatus = async () => {
     try {
       const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
@@ -73,6 +74,62 @@ function App() {
     weekday: 'long',
   };
   var [date,setDate] = useState(new Date());
+=======
+  const [frnrp, setFrnrp] = useState(''); 
+
+  useEffect(() => {
+    const eventSource = new EventSource('http://localhost:4444/check');
+
+    eventSource.onmessage = (event) => {
+        setFrnrp(event.data);
+
+    };
+
+    return () => {
+        eventSource.close(); // Clean up event source on component unmount
+    };
+}, []);
+  console.log("m",frnrp)
+
+//   const handleCheckStatus = async () => {
+//     try {
+//       const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
+//       console.log('Response from server:', response.data);
+//       axios.get('http://localhost:8080/yea')
+//       .then(response=>{
+//         setStatus(response.data)
+//       })
+// // Assuming server returns status
+//     } catch (error) {
+//       console.error('Error checking status:', error);
+//       setStatus('Error');
+//     }
+//     axios.get('http://localhost:4444')
+//       .then(response => {
+//         setFrnrp(response.data);
+//         console.log("m",frnrp)
+
+//       })
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       })
+//   };
+
+  // useEffect(()=>{
+  //   const intervalId = setInterval(() => {
+  //     handleCheckStatus();
+  //   }, 500);
+  //   return () => {
+  //     if (frnrp !== '') {
+  //       setFrnrp('');
+  //     }
+  //     clearInterval(intervalId);
+  //   };
+  // },[]);
+ 
+  
+  
+>>>>>>> 3c1b7b2383fcc81f8dd59befae19ad2fce326a78
   
   useEffect(() => {
       var timer = setInterval(()=>setDate(new Date()), 1000 )
@@ -91,6 +148,17 @@ function App() {
       });
   },[]);
 
+  // useEffect(() => {
+  //   axios.get('http://localhost:4444')
+  //     .then(response => {
+  //       setFrnrp(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // },[]);
+
+
 //function to import images
 function importAll(r) {
   let images = {};
@@ -99,12 +167,23 @@ function importAll(r) {
 }
   const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
   const filter = data.find(item => item.NRP === "1105");
+<<<<<<< HEAD
   const selper = filter ? filter.NAMA : []; // Check if filter is defined
   const selid = filter ? filter.NRP : []; // Check if filter is defined
   const selfo = selper ? images[`${selper}.jpg`] : null;
+=======
+  const selper = filter ? filter.NAMA : [];
+  const selid = filter ? filter.NRP : [];
+  const selfo = selper ? images[`${selper}.png`] : null;
+>>>>>>> 3c1b7b2383fcc81f8dd59befae19ad2fce326a78
+
+  // const selper = filter ? filter.NAMA : []; // Check if filter is defined
+  // const selid = filter ? filter.NRP : []; // Check if filter is defined
+  // const selfo = selper ? images[${selper}.png] : null;
 
   console.log("tes: ", status)
   return (
+<<<<<<< HEAD
     <div className='app'>
       <div className='app-top'>
         <div className='logo-container'>
@@ -131,6 +210,28 @@ function importAll(r) {
           <button onClick={handleCheckStatus}>Check Status</button>
             {status && <p>Status: {status}</p>}
         </div>
+=======
+    <div class="App">
+      <div class="App-header">
+        <div>
+          <header>
+            {/* <img src={'tes.jpg'}></img> */}
+          </header>
+        </div>
+        <DateTime />
+        {/* <Camera className="camera"/> */}
+        <img src={'http://localhost:4444/video_feed'} alt="logo" />
+      </div>
+      <div class='id'>
+        {<img src={selfo} alt={selper} class='image' />}
+        <h2>Nama: {selper}</h2>
+        <h2>NRP: {selid}</h2>
+        <h2>NRP: {frnrp}</h2>
+        <h2>status: {status}</h2>
+        {/* <button onClick={handleCheckStatus}>Check Status</button>
+          {status && <p>Status: {status}</p>}
+          {frnrp && <p>NRP: {frnrp}</p>} */}
+>>>>>>> 3c1b7b2383fcc81f8dd59befae19ad2fce326a78
       </div>
     </div>
   );
