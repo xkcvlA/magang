@@ -27,29 +27,7 @@ function App() {
 }, []);
   console.log("m",frnrp)
 
-//   const handleCheckStatus = async () => {
-//     try {
-//       const response = await axios.post('http://localhost:8080/checkStatus', { data: 'Hello from React' });
-//       console.log('Response from server:', response.data);
-//       axios.get('http://localhost:8080/yea')
-//       .then(response=>{
-//         setStatus(response.data)
-//       })
-// // Assuming server returns status
-//     } catch (error) {
-//       console.error('Error checking status:', error);
-//       setStatus('Error');
-//     }
-//     axios.get('http://localhost:4444')
-//       .then(response => {
-//         setFrnrp(response.data);
-//         console.log("m",frnrp)
-
-//       })
-//       .catch(error => {
-//         console.error('Error fetching data:', error);
-//       })
-//   };
+  
 
   // useEffect(()=>{
   //   const intervalId = setInterval(() => {
@@ -88,6 +66,29 @@ function importAll(r) {
   const selper = filter ? filter.EmpName : [];
   const selid = filter ? filter.EmpID : [];
   const selfo = selper ? images[`${selper}.png`] : null;
+  const selshift = filter ? filter.shiftID : [];
+  console.log("s", selshift)
+
+  const handleCheckStatus = async () => {
+    if(selshift && selshift.length>0){
+      try {
+        const response = await axios.post('http://localhost:8080/checkStatus', {data: selshift});
+        console.log('Response from server:', response.data);
+        setStatus(response.data);
+  // Assuming server returns status
+      } catch (error) {
+        console.error('Error checking status:', error);
+        setStatus('Error');
+      }
+    }
+    else{
+      setStatus("")
+    }
+  };
+
+  useEffect(()=>{
+    handleCheckStatus();      
+  }, [frnrp]);
 
 
   console.log("tes: ", status)

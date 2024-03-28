@@ -4,7 +4,7 @@ const cors = require('cors');
 const sql = require('mssql');
 const bodyParser = require('body-parser'); 
 const {shifts, getStatus}= require('./shifts');
-const theshift = shifts['shift1'];
+
 
 // Configuration for your SQL Server connection
 const config = {
@@ -38,7 +38,7 @@ app.get('/getData', async(req, res) => {
       const data = result.recordset;
       //send as json
       res.json(data);
-      console.log(data);
+      // console.log(data);
  }
  catch(error) {
       console.error("error executing: ", error);
@@ -53,20 +53,30 @@ app.listen(8080, () => {
 
 app.use(cors());
 app.use(bodyParser.json());
-app.post('/checkStatus', (req, res) => {
+app.post('/checkStatus', async (req, res) => {
   try {
         const { data } = req.body;
         console.log('Received data:', data);
-        res.json({ message: 'Data received and processed successfully' });
+        // res.json({ message: 'Data received and processed successfully' });
         if(req.body.data){
-              app.get('/yea', async(req, res)=>{
-                    let myshift = getStatus(theshift); 
-                    res.json(myshift);
-                    myshift="";
-              });
-              req.body.data= '';
-              
+              const datashift = "shift" + data
+              const theshift = shifts[datashift];
+              // console.log("the", datashift, theshift)
+              let myshift = getStatus(theshift); 
+              // console.log(myshift);
+              res.json(myshift);
+              // app.get('/yea', (req, res)=>{
+              //       res.json(myshift);
+              //       console.log("ta", myshift)
+                    
+                     
+              // });
+                 
         }
+        myshift="";
+        // console.log("boo", myshift)
+        req.body.data= ''; 
+        
         
       } catch (error) {
         console.error('Error checking status:', error);

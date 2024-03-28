@@ -12,7 +12,7 @@ const shifts = {
         checkIn: ['23:00', '01:00'],
         checkOut: ['16:00', '18:00'],
     },
-    nonshift: {
+    shift4: {
         checkIn: ['07:00', '09:00'],
         checkOut: ['16:00', '18:00'],
     },
