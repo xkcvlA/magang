@@ -13,7 +13,7 @@ const config = {
   password: 'a.mle_21',
   server: 'localhost',    // Change this to your SQL Server hostname
   port: 1433,             // Change this to your SQL Server port
-  database: 'master', // Change this to your database name
+  database: 'testDB', // Change this to your database name
   options: {
     encrypt: false,       // Change to true if you're using Azure SQL Database
     trustServerCertificate: false // Change to true if you're using Azure SQL Database
@@ -34,7 +34,7 @@ app.get('/getData', async(req, res) => {
       //connection
       const pool = await sql.connect(config);
       //query
-      const result = await pool.request().query('SELECT * FROM frfr');
+      const result = await pool.request().query('SELECT * FROM EmpDet');
       //store data
       const data = result.recordset;
       //send as json
@@ -69,9 +69,9 @@ app.post('/checkStatus', (req, res) => {
         res.json({ message: 'Data received and processed successfully' });
         if(req.body.data){
               app.get('/yea', async(req, res)=>{
-                    let alalal = getStatus(theshift); 
-                    res.json(alalal);
-                    alalal="";
+                    let myshift = getStatus(theshift); 
+                    res.json(myshift);
+                    myshift="";
               });
               req.body.data= '';
               

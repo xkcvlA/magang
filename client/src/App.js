@@ -9,15 +9,15 @@ function App() {
   const [status, setStatus] = useState('');
   const [frnrp, setFrnrp] = useState(''); 
 
-  useEffect(() => {
-    const eventSource = new EventSource('http://localhost:4444/check');
-    eventSource.onmessage = (event) => {
-        setFrnrp(event.data);
-    };
-    return () => {
-        eventSource.close(); // Clean up event source on component unmount
-    };
-  }, []);
+  // useEffect(() => {
+  //   const eventSource = new EventSource('http://localhost:4444/check');
+  //   eventSource.onmessage = (event) => {
+  //       setFrnrp(event.data);
+  //   };
+  //   return () => {
+  //       eventSource.close(); // Clean up event source on component unmount
+  //   };
+  // }, []);
 
   // date
   const options = {
@@ -56,15 +56,15 @@ function App() {
       });
   },[]);
 
-  useEffect(() => {
-    axios.get('http://localhost:4444')
-      .then(response => {
-        setFrnrp(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  },[]);
+  // useEffect(() => {
+  //   axios.get('http://localhost:4444')
+  //     .then(response => {
+  //       setFrnrp(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // },[]);
 
 
 // function to import images
@@ -74,10 +74,10 @@ function importAll(r) {
   return images;
 }
   const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
-  const filter = data.find(item => item.NRP === "1105");
-  const selper = filter ? filter.NAMA : []; // Check if filter is defined
-  // const selid = filter ? filter.NRP : []; // Check if filter is defined
-  const selfo = selper ? images[`${selper}.jpg`] : null;
+  const filter = data.find(item => item.EmpID === frnrp);
+  const selper = filter ? filter.EmpName : []; // Check if filter is defined
+  const selid = filter ? filter.EmpID : []; // Check if filter is defined
+  const selfo = selper ? images[`${selper}.png`] : null;
 
   console.log("tes: ", status)
   return (
@@ -101,10 +101,10 @@ function importAll(r) {
         </div>
       </div>
       <div className='body-cont2'>
-        <img src={"./a.png"} alt={selper} className='foto' />
+        <img src={selfo} alt={selper} className='foto' />
         <div className='id'>
           <h2>Nama: {selper}</h2>
-          <h2>NRP: {frnrp}</h2>
+          <h2>NRP: {selid}</h2>
           <h2>Status: {status}</h2>
         </div>
       {/* <button onClick={handleCheckStatus}>Check Status</button> */}

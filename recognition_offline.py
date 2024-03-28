@@ -61,7 +61,8 @@ class FaceRecognition:
                         if face_distance < 0.9:
                             confi = self.face_confidence(face_distance)
                             if confi > 90:
-                                name = self.known_face_names[best_match_index]
+                                imgname = self.known_face_names[best_match_index]
+                                name = imgname.split('.')[0]
                                 confidence = self.face_confidence(face_distances[best_match_index])
                                 # Draw a red frame around the face
                     self.face_names.append(f'{name} ({confidence})')
