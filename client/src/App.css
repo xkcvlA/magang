@@ -98,6 +98,7 @@
   justify-content: center;
   width: 50%;
   float: left;
+  white-space: nowrap;
 }
 
 .body-3 {
@@ -106,6 +107,67 @@
   align-content: center;
   justify-content: center;
   flex-direction: column;
+  white-space: nowrap;
+}
+
+.body-7 {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.body-8 {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.foto {
+  width: 150px; /* Adjust the width of the image as needed */
+  height: auto;
+  aspect-ratio: auto;
+  align-self: center;
+  white-space: nowrap;
+}
+
+.placeholder {
+  width: 200px; /* Set width as needed */
+  height: 200px; /* Set height as needed */
+  background-color: #ffffff; /* Set background color */
+}
+
+.id {
+  font-size: medium;
+  color: rgb(0, 0, 0);
+  align-self: center;
+  width: max-content;
+  float: right;
+}
+
+.check-in {
+  background-color: rgb(17, 213, 17); /* Color for check-in status */
+  border-color: rgb(17, 213, 17); /* Border color for check-in status */
+  padding: 10px;
+  margin-top: 10px;
+  width: 50%;
+  align-self: center;
+}
+
+.check-out {
+  background-color: orange;
+  border-color: orange;
+  padding: 10px;
+  margin-top: 10px;
+  width: 50%;
+  align-self: center;
+}
+
+.check {
+  font-weight: bold;
+  color: black;
 }
 
 .body-4 {
@@ -116,36 +178,10 @@
   flex-direction: row;
 }
 
-.foto {
-  width: 150px; /* Adjust the width of the image as needed */
-  height: auto;
-  aspect-ratio: auto;
-  align-self: center;
-}
-
-.id {
-  font-size: medium;
-  color: rgb(0, 0, 0);
-  align-self: center;
-}
-
-.check-in {
-  background-color: rgb(17, 213, 17); /* Color for check-in status */
-  border-color: rgb(17, 213, 17); /* Border color for check-in status */
-  padding: 10px;
-  margin-top: 10px;
-}
-
-.check-out {
-  background-color: orange;
-  border-color: orange;
-  padding: 10px;
-  margin-top: 10px;
-}
-
-.check {
-  font-weight: bold;
-  color: black;
+.status-placeholder {
+  width: 200px; /* Set width as needed */
+  height: 200px; /* Set height as needed */
+  background-color: #ffffff; /* Set background color */
 }
 
 .phil-cont {
@@ -159,17 +195,13 @@
   color: rgb(0, 0, 0);
   align-self: center;
   border-bottom: grey;
-  border-width: 10px;
+  border-width: 2px;
   border-block-end: solid; 
 }
 
 .p-photo {
-  width: 100px; /* Adjust the width of the image as needed */
+  width: 150px; /* Adjust the width of the image as needed */
   height: auto;
   aspect-ratio: auto;
   align-self: center;
-}
-
-.s {
-  src: ;
 }

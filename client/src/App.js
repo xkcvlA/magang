@@ -3,7 +3,7 @@ import './App.css';
 import React, { useState, useEffect} from 'react';
 import logo from './logo.png';
 import GFB from './logo-2.png';
-import phil from './philosophy_01.png';
+// import phil from './philosophy_01.png';
 
 //data will be the string we send from our server
 function App() {
@@ -149,27 +149,36 @@ function importAll(r) {
       </div>
       <div className='body-cont2'>
         <div className='body-3'>
-          <img src={selfo} alt={selper} className='foto' />
-          <div className='id'>
-            <h2>Nama: {selper}</h2>
-            <h2>NRP: {selid}</h2>
-            <h2>Status: {status}</h2>
-              {status === "Check in" && (
-                <div className="check-in">
-                  <p className='check'>Welcome, {selper}!</p>
-                </div>
-              )}
-              {status === "Check out" && (
-                <div className="check-out">
-                  <p className='check'>Thank you, {selper}!</p>
-                </div>
-              )}
+          {selfo ? (
+            <div className='foto'>
+              <img src={selfo} alt={selper} className='foto' />
+            </div>
+          ) : (
+              <div className='foto placeholder'></div>
+            )}
+          <div className='body-8'>
+          <div className='body-7'>
+            <div className='id' style={{ display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ flex: 1 }}>Nama:</h2>
+              <h2 style={{ flex: 1 }}>NRP:</h2>
+              <h2 style={{ flex: 1 }}>Status:</h2>
+            </div>
+            <div className='data' style={{ display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ flex: 1 }}>{selper || '-'}</h2>
+              <h2 style={{ flex: 1 }}>{selid || '-'}</h2>
+              <h2 style={{ flex: 1 }}>{status || '-'}</h2>
+            </div>
           </div>
-        </div>
-        <div className='body-4'>
-          <div className='phil-cont'>
-            <h3 className='phil-title'>Our Philosophy</h3>
-            <img src={phil} alt={'philosophy'} className='p-photo' />
+          {status === "Check in" && (
+            <div className="check-in">
+              <p className='check'>Welcome, {selper}!</p>
+            </div>
+          )}
+          {status === "Check out" && (
+            <div className="check-out">
+              <p className='check'>Thank you, {selper}!</p>
+            </div>
+          )}
           </div>
         </div>
       </div>
