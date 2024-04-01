@@ -2,6 +2,8 @@ import axios from 'axios';
 import './App.css';
 import React, { useState, useEffect} from 'react';
 import logo from './logo.png';
+import GFB from './logo-2.png';
+import phil from './philosophy_01.png';
 
 //data will be the string we send from our server
 function App() {
@@ -9,6 +11,7 @@ function App() {
   const [status, setStatus] = useState('');
   const [frnrp, setFrnrp] = useState(''); 
   const [EmpId, setEmpId] = useState(null); // State to store EmpId
+  const [Ctime, setCtime] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:8080/getEmpId')
@@ -49,8 +52,14 @@ function App() {
   useEffect(() => {
     const eventSource = new EventSource('http://localhost:4444/check');
     eventSource.onmessage = (event) => {
-        setFrnrp(event.data);
+      const dataset = event.data
+      const nameIndex = dataset.split(" , "); 
+      const name = nameIndex[0];
+      const time = nameIndex[1];
+      setFrnrp(name);
+      setCtime(time);
     };
+    
     return () => {
         eventSource.close(); // Clean up event source on component unmount
     };
@@ -91,28 +100,26 @@ function importAll(r) {
   const selper = filter ? filter.EmpName : [];
   const selid = filter ? filter.EmpID : []; 
   const selfo = selper ? images[`${selper}.png`] : null;
-  const selshift = filter ? filter.shiftID : [];
-
-  const handleCheckStatus = async () => {
-    if(selshift && selshift.length>0){
-      try {
-        const response = await axios.post('http://localhost:8080/checkStatus', {data: selshift});
-        console.log('Response from server:', response.data);
-        setStatus(response.data);
-  // Assuming server returns status
-      } catch (error) {
-        console.error('Error checking status:', error);
-        setStatus('Error');
-      }
-    }
-    else{
-      setStatus("")
-    }
-  };
 
   useEffect(()=>{
+    const handleCheckStatus = async () => {
+      const selshift = data.find(item => item.EmpID === frnrp)?.shiftID;
+      if (selshift && selshift.length > 0) {
+        try {
+          const response = await axios.post('http://localhost:8080/checkStatus', { data: selshift });
+          console.log('Response from server:', response.data);
+          setStatus(response.data);
+        } catch (error) {
+          console.error('Error checking status:', error);
+          setStatus('Error');
+        }
+      } else {
+        setStatus('');
+      }
+    };
+
     handleCheckStatus();      
-  }, [frnrp]);
+  }, [frnrp, data]);
 
 
   console.log("tes: ", status)
@@ -121,7 +128,10 @@ function importAll(r) {
     <div className='app'>
       <div className='app-top'>
         <div className='logo-container'>
-          <img src={logo} alt='logo' className='logo' />
+            <a href='https://musashi.co.in/MusashiPhilosophy'>
+              <img src={logo} alt='logo' className='logo' />
+              <img src={GFB} alt='logo' className='logo-2' />
+            </a>
         </div>
         <div className='date-container'>
           <p className='date'>{date.toLocaleDateString('id-ID', options)}</p>
@@ -140,8 +150,6 @@ function importAll(r) {
       <div className='body-cont2'>
         <div className='body-3'>
           <img src={selfo} alt={selper} className='foto' />
-        </div>
-        <div className='body-4'>
           <div className='id'>
             <h2>Nama: {selper}</h2>
             <h2>NRP: {selid}</h2>
@@ -156,6 +164,12 @@ function importAll(r) {
                   <p className='check'>Thank you, {selper}!</p>
                 </div>
               )}
+          </div>
+        </div>
+        <div className='body-4'>
+          <div className='phil-cont'>
+            <h3 className='phil-title'>Our Philosophy</h3>
+            <img src={phil} alt={'philosophy'} className='p-photo' />
           </div>
         </div>
       </div>

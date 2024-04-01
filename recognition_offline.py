@@ -3,6 +3,7 @@ import face_recognition
 import os, sys
 import numpy as np
 import math
+import time
 
 class FaceRecognition:
     face_locations = []
@@ -12,6 +13,8 @@ class FaceRecognition:
     known_face_names = []
     the_name = ""
     process_current_frame = True
+    current_time = ""
+
 
     def __init__(self):
         self.encode_faces()
@@ -60,6 +63,7 @@ class FaceRecognition:
                                 confidence = self.face_confidence(face_distances[best_match_index])
                                 # Draw a red frame around the face
                     self.face_names.append(f'{name} ({confidence})')
+                    self.current_time = time.strftime('%H:%M:%S')
                     self.the_name = name
                     cv2.rectangle(frame, (left * 4, top * 4), (right * 4, bottom * 4), (0, 0, 255), 2)
                     # Display the name and confidence
