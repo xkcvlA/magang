@@ -18,6 +18,36 @@ const config = {
   }
 };
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Example route to handle POST requests to insert data into MSSQL database
+app.post('/api/saveData', async (req, res) => {
+  const { field1, field2, field3, field4 } = req.body;
+
+  try {
+    // Create a connection pool
+    const pool = await sql.connect(config);
+
+    // Query to insert data into a table
+    const result = await pool.request()
+      .input('EmpID', sql.VarChar, field1)
+      .input('status', sql.VarChar, field2)
+      .input('date', sql.Date, field3)
+      .input('time', sql.Time, field4)
+      .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@field1, @field2, @field3, @field4)');
+
+    console.log('Data inserted successfully:', result);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error inserting data:', error);
+    res.sendStatus(500);
+  } finally {
+    // Close connection pool
+    sql.close();
+  }
+});
+
 var allowCrossDomain = function(req, res, next) {
       res.header('Access-Control-Allow-Origin', "*");
       res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -45,11 +75,6 @@ app.get('/getData', async(req, res) => {
  }
 });
 
-// Start the Express server
-app.listen(8080, () => {
-  console.log("server listening on port 8080");
-});
-
 app.use(cors());
 app.use(bodyParser.json());
 app.post('/checkStatus', async (req, res) => {
@@ -71,3 +96,8 @@ app.post('/checkStatus', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' }); // Send an error response
          }
   });
+
+// Start the Express server
+app.listen(8080, () => {
+  console.log("server listening on port 8080");
+});
