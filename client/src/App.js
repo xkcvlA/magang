@@ -8,6 +8,34 @@ function App() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
   const [frnrp, setFrnrp] = useState(''); 
+  const [EmpId, setEmpId] = useState(null); // State to store EmpId
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/getEmpId')
+      .then(response => {
+        setEmpId(response.data.EmpID); // Assuming the response contains EmpId
+      })
+      .catch(error => {
+        console.error('Error fetching EmpId:', error);
+      });
+  }, []);
+  
+  // Function to handle check-in/check-out action
+  const handleCheckAction = async (EmpId, action) => {
+    try {
+      // Send HTTP POST request to the Express.js endpoint
+      await axios.post('/api/storeCheckTime', { EmpId, action });
+      console.log('Check time stored successfully');
+    } catch (error) {
+      console.error('Error storing check time:', error);
+    }
+  };
+  
+  // Example usage when someone checks in
+  handleCheckAction(EmpId, 'check-in');
+  
+  // Example usage when someone checks out
+  handleCheckAction(EmpId, 'check-out');
 
   // date
   const options = {
@@ -30,11 +58,17 @@ function App() {
   console.log("m",frnrp)
 
   useEffect(() => {
-      var timer = setInterval(()=>setDate(new Date()), 1000 )
-      return function cleanup() {
-          clearInterval(timer)
-      }
-  });
+    let animationFrameId;
+    // Function to update the time
+    const updateDate = () => {
+      setDate(new Date());
+      animationFrameId = requestAnimationFrame(updateDate);
+    };
+    // Start updating the time
+    updateDate();
+    // Clean up by canceling the animation frame
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
 
   useEffect(() => {
     axios.get('http://localhost:8080/getData')
@@ -58,8 +92,11 @@ function importAll(r) {
   const selid = filter ? filter.EmpID : []; 
   const selfo = selper ? images[`${selper}.png`] : null;
   const selshift = filter ? filter.shiftID : [];
-  console.log("s", selshift)
 
+  useEffect(()=>{
+    handleCheckStatus();      
+  }, [frnrp]);
+  
   const handleCheckStatus = async () => {
     if(selshift && selshift.length>0){
       try {
@@ -76,10 +113,6 @@ function importAll(r) {
       setStatus("")
     }
   };
-
-  useEffect(()=>{
-    handleCheckStatus();      
-  }, [frnrp]);
 
   console.log("tes: ", status)
   console.log(selper)

@@ -18,36 +18,6 @@ const config = {
   }
 };
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// Example route to handle POST requests to insert data into MSSQL database
-app.post('/api/saveData', async (req, res) => {
-  const { field1, field2, field3, field4 } = req.body;
-
-  try {
-    // Create a connection pool
-    const pool = await sql.connect(config);
-
-    // Query to insert data into a table
-    const result = await pool.request()
-      .input('EmpID', sql.VarChar, field1)
-      .input('status', sql.VarChar, field2)
-      .input('date', sql.Date, field3)
-      .input('time', sql.Time, field4)
-      .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@field1, @field2, @field3, @field4)');
-
-    console.log('Data inserted successfully:', result);
-    res.sendStatus(200);
-  } catch (error) {
-    console.error('Error inserting data:', error);
-    res.sendStatus(500);
-  } finally {
-    // Close connection pool
-    sql.close();
-  }
-});
-
 var allowCrossDomain = function(req, res, next) {
       res.header('Access-Control-Allow-Origin', "*");
       res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -97,7 +67,29 @@ app.post('/checkStatus', async (req, res) => {
          }
   });
 
+app.post('/api/storeCheckTime', async (req, res) => {
+  try {
+    const { EmpId, action } = req.body;
+    const currentTime = new Date().toISOString(); // Get current timestamp
+    const currentDate = new Date().toISOString(); // Get current timestamp
+
+    // Execute SQL query to insert check-in/check-out record into the database
+    await pool.request()
+      .input('EmpId', sql.VarChar, EmpId)
+      .input('Status', sql.VarChar(10), action)
+      .input('Time', sql.Time, currentTime)
+      .input('Date', sql.Date, currentDate)
+      .query('INSERT INTO CheckInOut (EmpID, Status, Time, Date) VALUES (@empId, @action, @currentTime, @currentDate)');
+
+    res.sendStatus(200); // Send success response
+  } catch (error) {
+    console.error('Error storing check time:', error);
+    res.sendStatus(500); // Send error response
+  }
+});
+
 // Start the Express server
 app.listen(8080, () => {
   console.log("server listening on port 8080");
 });
+
