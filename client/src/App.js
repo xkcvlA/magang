@@ -68,7 +68,7 @@ function App() {
     updateDate();
     // Clean up by canceling the animation frame
     return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  },[]);
 
   useEffect(() => {
     axios.get('http://localhost:8080/getData')
@@ -93,10 +93,6 @@ function importAll(r) {
   const selfo = selper ? images[`${selper}.png`] : null;
   const selshift = filter ? filter.shiftID : [];
 
-  useEffect(()=>{
-    handleCheckStatus();      
-  }, [frnrp]);
-  
   const handleCheckStatus = async () => {
     if(selshift && selshift.length>0){
       try {
@@ -113,6 +109,11 @@ function importAll(r) {
       setStatus("")
     }
   };
+
+  useEffect(()=>{
+    handleCheckStatus();      
+  }, [frnrp]);
+
 
   console.log("tes: ", status)
   console.log(selper)

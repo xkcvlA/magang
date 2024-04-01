@@ -71,15 +71,15 @@ app.post('/api/storeCheckTime', async (req, res) => {
   try {
     const { EmpId, action } = req.body;
     const currentTime = new Date().toISOString(); // Get current timestamp
-    const currentDate = new Date().toISOString(); // Get current timestamp
+    const currentDate = new Date(); // Get current timestamp
 
     // Execute SQL query to insert check-in/check-out record into the database
     await pool.request()
       .input('EmpId', sql.VarChar, EmpId)
-      .input('Status', sql.VarChar(10), action)
-      .input('Time', sql.Time, currentTime)
-      .input('Date', sql.Date, currentDate)
-      .query('INSERT INTO CheckInOut (EmpID, Status, Time, Date) VALUES (@empId, @action, @currentTime, @currentDate)');
+      .input('status', sql.VarChar(10), action)
+      .input('date', sql.Date, currentDate)
+      .input('time', sql.Time, currentTime)
+      .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@EmpId, @action, @currentDate, @currentTime)');
 
     res.sendStatus(200); // Send success response
   } catch (error) {
