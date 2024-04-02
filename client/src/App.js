@@ -5,49 +5,32 @@ import logo from './logo.png';
 import GFB from './logo-2.png';
 import phil from './philosophy_01.png';
 
-//data will be the string we send from our server
 function App() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
   const [frnrp, setFrnrp] = useState(''); 
-  const [EmpId, setEmpId] = useState(null); // State to store EmpId
+  const [EmpId, setEmpId] = useState(null); 
   const [Ctime, setCtime] = useState('');
+  const [checkedIn, setCheckedIn] = useState(false); // Track whether user is checked in or not
 
   useEffect(() => {
     axios.get('http://localhost:8080/getEmpId')
       .then(response => {
-        setEmpId(response.data.EmpID); // Assuming the response contains EmpId
+        setEmpId(response.data.EmpID);
       })
       .catch(error => {
         console.error('Error fetching EmpId:', error);
       });
   }, []);
-  
-  // Function to handle check-in/check-out action
-  const handleCheckAction = async (EmpId, action) => {
-    try {
-      // Send HTTP POST request to the Express.js endpoint
-      await axios.post('/api/storeCheckTime', { EmpId, action });
-      console.log('Check time stored successfully');
-    } catch (error) {
-      console.error('Error storing check time:', error);
-    }
-  };
-  
-  // Example usage when someone checks in
-  handleCheckAction(EmpId, 'check-in');
-  
-  // Example usage when someone checks out
-  handleCheckAction(EmpId, 'check-out');
 
-  // date
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long',
-  };
-  var [date,setDate] = useState(new Date());
+    // date
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+    };
+    var [date,setDate] = useState(new Date());
 
   useEffect(() => {
     const eventSource = new EventSource('http://localhost:4444/check');
@@ -58,24 +41,23 @@ function App() {
       const time = nameIndex[1];
       setFrnrp(name);
       setCtime(time);
+
+      // Automatically store the check-in time when user is recognized
+      handleCheckAction(EmpId, 'check-in');
     };
     
     return () => {
-        eventSource.close(); // Clean up event source on component unmount
+        eventSource.close();
     };
   }, []);
-  console.log("m",frnrp)
 
   useEffect(() => {
     let animationFrameId;
-    // Function to update the time
     const updateDate = () => {
       setDate(new Date());
       animationFrameId = requestAnimationFrame(updateDate);
     };
-    // Start updating the time
     updateDate();
-    // Clean up by canceling the animation frame
     return () => cancelAnimationFrame(animationFrameId);
   },[]);
 
@@ -88,6 +70,41 @@ function App() {
         console.error('Error fetching data:', error);
       });
   },[]);
+
+  useEffect(() => {
+    const handleCheckStatus = async () => {
+      const selshift = data.find(item => item.EmpID === frnrp)?.shiftID;
+      if (selshift && selshift.length > 0) {
+        try {
+          const response = await axios.post('http://localhost:8080/checkStatus', { data: selshift });
+          console.log('Response from server:', response.data);
+          setStatus(response.data);
+        } catch (error) {
+          console.error('Error checking status:', error);
+          setStatus('Error');
+        }
+      } else {
+        setStatus('');
+      }
+    };
+
+    handleCheckStatus();      
+  }, [frnrp, data]);
+
+  // Function to handle check-in/check-out action
+  const handleCheckAction = async (EmpId, action) => {
+    try {
+      await axios.post('/api/storeCheckTime', { EmpId, action });
+      console.log('Check time stored successfully');
+      if (action === 'check-in') {
+        setCheckedIn(true); // Set checkedIn state to true when user checks in
+      } else if (action === 'check-out') {
+        setCheckedIn(false); // Set checkedIn state to false when user checks out
+      }
+    } catch (error) {
+      console.error('Error storing check time:', error);
+    }
+  };
 
 // function to import images
 function importAll(r) {

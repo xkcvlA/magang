@@ -191,11 +191,14 @@
 .phil-cont {
   width: 25%;
   flex-direction: column;
-  margin: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .phil-title {
   font-size: medium;
+  text-align: center;
   font-weight: bold;
   color: rgb(0, 0, 0);
   align-self: center;
@@ -214,5 +217,7 @@
 .mission {
   overflow-wrap: break-word;
   word-wrap: break-word;
-  margin: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
