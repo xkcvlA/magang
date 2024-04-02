@@ -71,26 +71,6 @@ function App() {
       });
   },[]);
 
-  useEffect(() => {
-    const handleCheckStatus = async () => {
-      const selshift = data.find(item => item.EmpID === frnrp)?.shiftID;
-      if (selshift && selshift.length > 0) {
-        try {
-          const response = await axios.post('http://localhost:8080/checkStatus', { data: selshift });
-          console.log('Response from server:', response.data);
-          setStatus(response.data);
-        } catch (error) {
-          console.error('Error checking status:', error);
-          setStatus('Error');
-        }
-      } else {
-        setStatus('');
-      }
-    };
-
-    handleCheckStatus();      
-  }, [frnrp, data]);
-
   // Function to handle check-in/check-out action
   const handleCheckAction = async (EmpId, action) => {
     try {
@@ -137,7 +117,6 @@ function importAll(r) {
 
     handleCheckStatus();      
   }, [frnrp, data]);
-
 
   console.log("tes: ", status)
   console.log(selper)

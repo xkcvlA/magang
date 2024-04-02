@@ -17,6 +17,7 @@ const shifts = {
         checkOut: ['16:00', '18:00'],
     },
 };
+
 function getStatus(theshift) {
     const currentTime = moment().format('HH:mm');
     const [checkInStart, checkInEnd] = theshift.checkIn;
