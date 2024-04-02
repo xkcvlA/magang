@@ -130,17 +130,25 @@
   height: auto;
   aspect-ratio: auto;
   align-self: center;
-  white-space: nowrap;
+  margin-top: 5px;
 }
 
 .placeholder {
-  width: 200px; /* Set width as needed */
-  height: 200px; /* Set height as needed */
+  width: 150px; /* Set width as needed */
+  height: 100px; /* Set height as needed */
   background-color: #ffffff; /* Set background color */
 }
 
 .id {
-  font-size: medium;
+  font-size: 15px;
+  color: rgb(0, 0, 0);
+  align-self: center;
+  width: max-content;
+  float: right;
+}
+
+.data {
+  font-size: 15px;
   color: rgb(0, 0, 0);
   align-self: center;
   width: max-content;
@@ -150,8 +158,8 @@
 .check-in {
   background-color: rgb(17, 213, 17); /* Color for check-in status */
   border-color: rgb(17, 213, 17); /* Border color for check-in status */
-  padding: 10px;
-  margin-top: 10px;
+  padding: 5px;
+  /* margin-top: 5px; */
   width: 50%;
   align-self: center;
 }
@@ -159,34 +167,31 @@
 .check-out {
   background-color: orange;
   border-color: orange;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 5px;
+  margin-top: 5px;
   width: 50%;
   align-self: center;
 }
 
 .check {
   font-weight: bold;
+  font-size: 15px;
   color: black;
+  text-align: center;
 }
 
 .body-4 {
   height: 25%;
   display: flex;
   align-content: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: row;
 }
 
-.status-placeholder {
-  width: 200px; /* Set width as needed */
-  height: 200px; /* Set height as needed */
-  background-color: #ffffff; /* Set background color */
-}
-
 .phil-cont {
-  width: 50%;
+  width: 25%;
   flex-direction: column;
+  margin: 20px;
 }
 
 .phil-title {
@@ -194,9 +199,9 @@
   font-weight: bold;
   color: rgb(0, 0, 0);
   align-self: center;
-  border-bottom: grey;
   border-width: 2px;
-  border-block-end: solid; 
+  border-bottom-style: solid;
+  border-bottom-color: rgb(162, 159, 159);
 }
 
 .p-photo {
@@ -204,4 +209,10 @@
   height: auto;
   aspect-ratio: auto;
   align-self: center;
+}
+
+.mission {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  margin: 20px;
 }

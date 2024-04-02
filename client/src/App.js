@@ -3,7 +3,7 @@ import './App.css';
 import React, { useState, useEffect} from 'react';
 import logo from './logo.png';
 import GFB from './logo-2.png';
-// import phil from './philosophy_01.png';
+import phil from './philosophy_01.png';
 
 //data will be the string we send from our server
 function App() {
@@ -157,28 +157,42 @@ function importAll(r) {
               <div className='foto placeholder'></div>
             )}
           <div className='body-8'>
-          <div className='body-7'>
-            <div className='id' style={{ display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ flex: 1 }}>Nama:</h2>
-              <h2 style={{ flex: 1 }}>NRP:</h2>
-              <h2 style={{ flex: 1 }}>Status:</h2>
+            <div className='body-7'>
+              <div className='id' style={{ display: 'flex', flexDirection: 'column' }}>
+                <h2 style={{ flex: 1 }}>Nama:</h2>
+                <h2 style={{ flex: 1 }}>NRP:</h2>
+                <h2 style={{ flex: 1 }}>Status:</h2>
+              </div>
+              <div className='data' style={{ display: 'flex', flexDirection: 'column', fontSize: '15px', marginLeft: '15px'}}>
+                <h2 style={{ flex: 1 }}>{selper || ''}</h2>
+                <h2 style={{ flex: 1 }}>{selid || ''}</h2>
+                <h2 style={{ flex: 1 }}>{status || ''}</h2>
+              </div>
             </div>
-            <div className='data' style={{ display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ flex: 1 }}>{selper || '-'}</h2>
-              <h2 style={{ flex: 1 }}>{selid || '-'}</h2>
-              <h2 style={{ flex: 1 }}>{status || '-'}</h2>
-            </div>
+            {status === "Check in" && (
+              <div className="check-in">
+                <p className='check'>Welcome, {selper}!</p>
+              </div>
+            )}
+            {status === "Check out" && (
+              <div className="check-out">
+                <p className='check'>Thank you, {selper}!</p>
+              </div>
+            )}
+            {status === "" && (
+              <div className='status placeholder'></div>
+            )}
           </div>
-          {status === "Check in" && (
-            <div className="check-in">
-              <p className='check'>Welcome, {selper}!</p>
+          <div className='body-4'>
+            <div className='phil-cont'>
+              <h2 className='phil-title'>Our Philosophy</h2>
+              <img className='p-photo' src={phil} alt='philosophy'/>
             </div>
-          )}
-          {status === "Check out" && (
-            <div className="check-out">
-              <p className='check'>Thank you, {selper}!</p>
+            <div className='mission'>
+            <h2 className='phil-title'>Our Corporate Mission</h2>
+              <p>We will continue to explore and develop our original Monozukuri(*) <br/>and thereby contribute to the global society by providing trusted and <br/>attractive products.</p>
+              <p>* "Monozukuri" is a Japanese word without an English equivalent: it <br/>expresses dedication and craftsmanship devoted to the whole production <br/>process</p>
             </div>
-          )}
           </div>
         </div>
       </div>
