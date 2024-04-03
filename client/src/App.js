@@ -9,19 +9,19 @@ function App() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
   const [frnrp, setFrnrp] = useState(''); 
-  const [EmpId, setEmpId] = useState(null); 
+  // const [EmpID, setEmpId] = useState(''); 
   const [Ctime, setCtime] = useState('');
-  const [checkedIn, setCheckedIn] = useState(false); // Track whether user is checked in or not
+  // const [checkedIn, setCheckedIn] = useState(false);
 
-  useEffect(() => {
-    axios.get('http://localhost:8080/getEmpId')
-      .then(response => {
-        setEmpId(response.data.EmpID);
-      })
-      .catch(error => {
-        console.error('Error fetching EmpId:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('http://localhost:8080/getEmpId')
+  //     .then(response => {
+  //       setEmpId(response.data.EmpID);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching EmpId:', error);
+  //     });
+  // }, []);
 
     // date
     const options = {
@@ -42,8 +42,8 @@ function App() {
       setFrnrp(name);
       setCtime(time);
 
-      // Automatically store the check-in time when user is recognized
-      handleCheckAction(EmpId, 'check-in');
+  //     // Automatically store the check-in time when user is recognized
+  //     handleCheckAction(EmpId, 'check-in');
     };
     
     return () => {
@@ -71,32 +71,36 @@ function App() {
       });
   },[]);
 
-  // Function to handle check-in/check-out action
-  const handleCheckAction = async (EmpId, action) => {
-    try {
-      await axios.post('/api/storeCheckTime', { EmpId, action });
-      console.log('Check time stored successfully');
-      if (action === 'check-in') {
-        setCheckedIn(true); // Set checkedIn state to true when user checks in
-      } else if (action === 'check-out') {
-        setCheckedIn(false); // Set checkedIn state to false when user checks out
-      }
-    } catch (error) {
-      console.error('Error storing check time:', error);
-    }
-  };
+  // function to import images
+  function importAll(r) {
+    let images = {};
+    r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+    return images;
+  }
 
-// function to import images
-function importAll(r) {
-  let images = {};
-  r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
-  return images;
-}
-  const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
-  const filter = data.find(item => item.EmpID === frnrp);
-  const selper = filter ? filter.EmpName : [];
-  const selid = filter ? filter.EmpID : []; 
-  const selfo = selper ? images[`${selper}.png`] : null;
+  // Function to handle recognition action
+  const handleRecognition = async (status) => {
+    // Get the current date and time
+    // Extract the date and time components separately
+    const Date = date.toLocaleDateString(undefined, options) // Extract date component
+    const time = Ctime; // Extract time component
+    // Assuming you have some recognition result (e.g., employee ID)
+    const empID = frnrp; // Replace with actual recognition result
+
+    try {
+      // Send recognition data to Express.js backend
+      const response = await axios.post('http://localhost:8080/recognize', { empID, status, Date, time });
+        console.log('Data sent successfully:', response.data);
+
+        // Provide feedback to the user (optional)
+        alert('Recognition data saved successfully!');
+      } catch (error) {
+        console.error('Error sending recognition data:', error);
+
+        // Provide feedback to the user (optional)
+        alert('Error saving recognition data. Please try again later.');
+      }
+  }; 
 
   useEffect(()=>{
     const handleCheckStatus = async () => {
@@ -117,6 +121,12 @@ function importAll(r) {
 
     handleCheckStatus();      
   }, [frnrp, data]);
+
+  const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
+  const filter = data.find(item => item.EmpID === frnrp);
+  const selper = filter ? filter.EmpName : [];
+  const selid = filter ? filter.EmpID : []; 
+  const selfo = selper ? images[`${selper}.png`] : null;
 
   console.log("tes: ", status)
   console.log(selper)
@@ -188,6 +198,8 @@ function importAll(r) {
             <h2 className='phil-title'>Our Corporate Mission</h2>
               <p>We will continue to explore and develop our original Monozukuri(*) <br/>and thereby contribute to the global society by providing trusted and <br/>attractive products.</p>
               <p>* "Monozukuri" is a Japanese word without an English equivalent: it <br/>expresses dedication and craftsmanship devoted to the whole production <br/>process</p>
+              <button onClick={() => handleRecognition('check-in')}>Check In</button>
+              <button onClick={() => handleRecognition('check-out')}>Check Out</button>
             </div>
           </div>
         </div>
