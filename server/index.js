@@ -2,9 +2,10 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const sql = require('mssql');
-const bodyParser = require('body-parser'); 
+const bodyParser = require('body-parser');
 const { shifts, getStatus } = require('./shifts');
 const axios = require('axios');
+const moment = require('moment-timezone');
 
 // Configuration for your SQL Server connection
 const config = {
@@ -31,21 +32,21 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Define a route to fetch data from the SQL table and send it as JSON
-// app.get('/getData', async (req, res) => {
-//   try {
-//     // Connect to SQL Server
-//     const pool = await sql.connect(config);
+app.get('/getData', async (req, res) => {
+  try {
+    // Connect to SQL Server
+    const pool = await sql.connect(config);
 
-//     // Execute SQL query to fetch data from the table
-//     const result = await pool.request().query('SELECT * FROM EmpDet');
+    // Execute SQL query to fetch data from the table
+    const result = await pool.request().query('SELECT * FROM EmpDet');
 
-//     // Send the fetched data as JSON response
-//     res.json(result.recordset);
-//   } catch (error) {
-//     console.error("Error executing SQL query:", error);
-//     res.status(500).send("Error fetching data");
-//   }
-// });
+    // Send the fetched data as JSON response
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Error executing SQL query:", error);
+    res.status(500).send("Error fetching data");
+  }
+});
 
 // Route to check status
 app.post('/checkStatus', async (req, res) => {
@@ -67,30 +68,42 @@ app.post('/checkStatus', async (req, res) => {
   }
 });
 
-app.get('/aaaaa', async (req, res) => {
-  try {
-    const response = await axios.get('http://localhost:4444/check');
-    const CTime = response.data.current_time;
-    // Do whatever you want with the currentTime
-    res.get(CTime);
-    console.log('curet: ', CTime);
-  } catch (error) {
-    res.status(500).send('Error Accessing Flask route');
-  }
-});
+const { Readable } = require('stream');
+// Make GET request to Flask SSE endpoint
+axios.get('http://127.0.0.1:4444/check', { responseType: 'stream' })
+    .then(response => {
+        const readableStream = response.data;
 
+        // Event listener for 'data' event
+        readableStream.on('data', chunk => {
+            const data = chunk.toString('utf8').trim(); // Convert buffer to string and remove whitespace
+            const nameIndex = data.split(" , "); 
+            const time = nameIndex[1];
+            currentTimeFromSSE = time;
+            // console.log('Received SSE data:', time);
+            // Process the SSE data as needed
+        });
+
+        // Event listener for 'end' event
+        readableStream.on('end', () => {
+            console.log('End of SSE stream');
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching SSE data from Flask:', error);
+        // Handle errors as needed
+    });
 
 // Route to save recognition data to SQL database
 app.post('/recognize', async (req, res) => {
   const { empID, status } = req.body;
-  // const time = Ctime;
 
   try {
     // Connect to SQL Server
     const pool = await sql.connect(config);
 
     // Format the currentTime string into a JavaScript Date object
-    const currentDate = new Date();
+    const currentDate = moment().tz('Asia/Jakarta').format(); // Get current time in Indonesia timezone
 
     const options = {
       year: 'numeric',
@@ -99,17 +112,23 @@ app.post('/recognize', async (req, res) => {
     };
 
     // Extract the date and time components separately
-    const date = currentDate.toLocaleDateString(undefined, options); // Extract date component
+    const date = moment().tz('Asia/Jakarta').format('YYYY-MM-DD'); // Extract date component in Indonesia timezone
     console.log("aaa: ", date);
-    const time = currentDate.toLocaleTimeString('en-US', { hour12: false }); // Extract time component
-    console.log("aaa: ", time);
+    // Convert time string to a JavaScript Date object
+    const timeParts = currentTimeFromSSE.split(':');
+    const time = moment().tz('Asia/Jakarta').set({ // Convert current time to Indonesia timezone
+      hour: parseInt(timeParts[0], 10),
+      minute: parseInt(timeParts[1], 10),
+      second: parseInt(timeParts[2], 10)
+    }).format('HH:mm:ss');
+    console.log("aaa: ", time); // Use the stored time variable
 
     // Execute SQL query to insert recognition data into the database
     await pool.request()
       .input('EmpID', sql.VarChar, empID)
       .input('status', sql.VarChar, status)
       .input('date', sql.Date, date) // Insert date component into separate column
-      .input('time', sql.Time, time) // Insert time component into separate column
+      .input('time', sql.VarChar, time) // Insert time component into separate column
       .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@empID, @status, @date, @time)');
 
     res.send('Recognition data saved successfully');

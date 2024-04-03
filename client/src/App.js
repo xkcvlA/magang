@@ -9,28 +9,29 @@ function App() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
   const [frnrp, setFrnrp] = useState(''); 
-  // const [EmpID, setEmpId] = useState(''); 
+  const [EmpID, setEmpId] = useState(''); 
   const [Ctime, setCtime] = useState('');
-  // const [checkedIn, setCheckedIn] = useState(false);
+  const [lastEmpID, setLastEmpID] = useState(''); // Store the last EmpID
+  const [lastRecognitionTime, setLastRecognitionTime] = useState(0); // Store the time of last recognition
 
-  // useEffect(() => {
-  //   axios.get('http://localhost:8080/getEmpId')
-  //     .then(response => {
-  //       setEmpId(response.data.EmpID);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching EmpId:', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios.get('http://localhost:8080/getEmpId')
+      .then(response => {
+        setEmpId(response.data.EmpID);
+      })
+      .catch(error => {
+        console.error('Error fetching EmpId:', error);
+      });
+  }, []);
 
-    // date
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-    };
-    var [date,setDate] = useState(new Date());
+  // Date options
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  };
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     const eventSource = new EventSource('http://localhost:4444/check');
@@ -41,13 +42,10 @@ function App() {
       const time = nameIndex[1];
       setFrnrp(name);
       setCtime(time);
-
-  //     // Automatically store the check-in time when user is recognized
-  //     handleCheckAction(EmpId, 'check-in');
     };
-    
+
     return () => {
-        eventSource.close();
+      eventSource.close();
     };
   }, []);
 
@@ -71,7 +69,7 @@ function App() {
       });
   },[]);
 
-  // function to import images
+  // Function to import images
   function importAll(r) {
     let images = {};
     r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
@@ -81,16 +79,27 @@ function App() {
   // Function to handle recognition action
   const handleRecognition = async (status) => {
     // Get the current date and time
-    // Extract the date and time components separately
-    const Date = date.toLocaleDateString(undefined, options) // Extract date component
+    const Date = date.toLocaleDateString(undefined, options); // Extract date component
     const time = Ctime; // Extract time component
     // Assuming you have some recognition result (e.g., employee ID)
     const empID = frnrp; // Replace with actual recognition result
 
-    try {
-      // Send recognition data to Express.js backend
-      const response = await axios.post('http://localhost:8080/recognize', { empID, status, Date, time });
+    // Check if empID is empty
+    if (!empID) {
+      console.log('Unknown EmpID. Skipping recognition.');
+      return;
+    }
+
+    // Check if the EmpID has changed or it's the first recognition
+    if (empID !== lastEmpID || Date.now() - lastRecognitionTime >= 2000) {
+      try {
+        // Send recognition data to Express.js backend
+        const response = await axios.post('http://localhost:8080/recognize', { empID, status, Date, time });
         console.log('Data sent successfully:', response.data);
+
+        // Update lastEmpID and lastRecognitionTime
+        setLastEmpID(empID);
+        setLastRecognitionTime(Date.now());
 
         // Provide feedback to the user (optional)
         alert('Recognition data saved successfully!');
@@ -100,9 +109,12 @@ function App() {
         // Provide feedback to the user (optional)
         alert('Error saving recognition data. Please try again later.');
       }
+    } else {
+      console.log('EmpID is the same within 2 seconds. Skipping recognition.');
+    }
   }; 
 
-  useEffect(()=>{
+  useEffect(() => {
     const handleCheckStatus = async () => {
       const selshift = data.find(item => item.EmpID === frnrp)?.shiftID;
       if (selshift && selshift.length > 0) {
@@ -148,7 +160,6 @@ function App() {
           <p className='time'>{date.toLocaleTimeString()}</p>
           <div className='camera-cont'>
             <img src={'http://localhost:4444/video_feed'} alt="cam" className='camera'/>
-            {/* <Camera className='camera' autoPlay/> */}
           </div>
           <p className='text'>Arahkan muka anda ke kamera</p>
         </div>
@@ -197,7 +208,6 @@ function App() {
             <div className='mission'>
             <h2 className='phil-title'>Our Corporate Mission</h2>
               <p>We will continue to explore and develop our original Monozukuri(*) <br/>and thereby contribute to the global society by providing trusted and <br/>attractive products.</p>
-              <p>* "Monozukuri" is a Japanese word without an English equivalent: it <br/>expresses dedication and craftsmanship devoted to the whole production <br/>process</p>
               <button onClick={() => handleRecognition('check-in')}>Check In</button>
               <button onClick={() => handleRecognition('check-out')}>Check Out</button>
             </div>
