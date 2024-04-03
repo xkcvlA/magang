@@ -5,7 +5,7 @@ const shifts = {
         checkOut: ['16:00', '18:00'],
     },
     shift2: {
-        checkIn: ['09:00', '16:00'],
+        checkIn: ['08:00', '16:00'],
         checkOut: ['23:00', '01:00'],
     },
     shift3: {
