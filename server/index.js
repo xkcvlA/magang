@@ -2,18 +2,28 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const sql = require('mssql');
+<<<<<<< HEAD
 const bodyParser = require('body-parser');
 const { shifts, getStatus } = require('./shifts');
 const axios = require('axios');
 const moment = require('moment-timezone');
+=======
+const bodyParser = require('body-parser'); 
+const {shifts, getStatus}= require('./shifts');
+
+>>>>>>> e2e4f4c2ef475ed569e984b630ae0131d5ca9bfe
 
 // Configuration for your SQL Server connection
 const config = {
   user: 'SA',
   password: 'a.mle_21',
-  server: 'localhost',    // Change this to your SQL Server hostname
+  server: '10.41.36.133',    // Change this to your SQL Server hostname
   port: 1433,             // Change this to your SQL Server port
+<<<<<<< HEAD
   database: 'testDB',     // Change this to your database name
+=======
+  database: 'testDB', // Change this to your database name
+>>>>>>> e2e4f4c2ef475ed569e984b630ae0131d5ca9bfe
   options: {
     encrypt: false,       // Change to true if you're using Azure SQL Database
     trustServerCertificate: false // Change to true if you're using Azure SQL Database
@@ -27,6 +37,7 @@ var allowCrossDomain = function(req, res, next) {
   next();
 }
 
+<<<<<<< HEAD
 app.use(allowCrossDomain);
 app.use(cors());
 app.use(bodyParser.json());
@@ -140,6 +151,25 @@ app.post('/recognize', async (req, res) => {
     console.error('Error saving recognition data:', error);
     res.status(500).send('Error saving recognition data');
   }
+=======
+// Define a route to fetch data from the SQL table and store it in a variable
+app.get('/getData', async(req, res) => {
+ try {
+      //connection
+      const pool = await sql.connect(config);
+      //query
+      const result = await pool.request().query('SELECT * FROM EmpDet');
+      //store data
+      const data = result.recordset;
+      //send as json
+      res.json(data);
+      // console.log(data);
+ }
+ catch(error) {
+      console.error("error executing: ", error);
+      res.status(500).send("error fetching data");
+ }
+>>>>>>> e2e4f4c2ef475ed569e984b630ae0131d5ca9bfe
 });
 
 // Start the Express server
@@ -147,3 +177,39 @@ const PORT = 8080;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+<<<<<<< HEAD
+=======
+
+app.use(cors());
+app.use(bodyParser.json());
+app.post('/checkStatus', async (req, res) => {
+  try {
+        const { data } = req.body;
+        console.log('Received data:', data);
+        // res.json({ message: 'Data received and processed successfully' });
+        if(req.body.data){
+              const datashift = "shift" + data
+              const theshift = shifts[datashift];
+              // console.log("the", datashift, theshift)
+              let myshift = getStatus(theshift); 
+              // console.log(myshift);
+              res.json(myshift);
+              // app.get('/yea', (req, res)=>{
+              //       res.json(myshift);
+              //       console.log("ta", myshift)
+                    
+                     
+              // });
+                 
+        }
+        myshift="";
+        // console.log("boo", myshift)
+        req.body.data= ''; 
+        
+        
+      } catch (error) {
+        console.error('Error checking status:', error);
+        res.status(500).json({ error: 'Internal Server Error' }); // Send an error response
+         }
+  });
+>>>>>>> e2e4f4c2ef475ed569e984b630ae0131d5ca9bfe

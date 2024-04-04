@@ -146,6 +146,7 @@ function App() {
 
   console.log("tes: ", status)
   console.log(selper)
+  console.log(selper)
   return (
     <div className='app'>
       <div className='app-top'>

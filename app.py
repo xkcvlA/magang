@@ -23,7 +23,11 @@ def video_feed():
 def stream_data():
     def sendstuff():
         while True:
+<<<<<<< HEAD
             yield f"data: {fr.the_name} , {fr.current_time}\n\n"
+=======
+            yield f"data: {fr.the_name}\n\n"
+>>>>>>> e2e4f4c2ef475ed569e984b630ae0131d5ca9bfe
             time.sleep(0.1)
             
     return Response(sendstuff(), mimetype='text/event-stream')
@@ -34,4 +38,8 @@ if __name__ == '__main__':
     debug = True
     options = None
 
+<<<<<<< HEAD
     app.run(host, port, debug, options)
+=======
+    app.run(host, port, debug, options)
+>>>>>>> e2e4f4c2ef475ed569e984b630ae0131d5ca9bfe
