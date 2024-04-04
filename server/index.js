@@ -48,6 +48,7 @@ app.get('/getData', async (req, res) => {
   }
 });
 
+let myshift;
 // Route to check status
 app.post('/checkStatus', async (req, res) => {
   try {
@@ -57,7 +58,7 @@ app.post('/checkStatus', async (req, res) => {
     if (req.body.data) {
       const datashift = "shift" + data;
       const theshift = shifts[datashift];
-      let myshift = getStatus(theshift);
+      myshift = getStatus(theshift);
       res.json(myshift);
     } else {
       res.status(400).json({ error: 'Data not provided' });
@@ -69,6 +70,10 @@ app.post('/checkStatus', async (req, res) => {
 });
 
 const { Readable } = require('stream');
+
+// Variable to store current time
+let currentTimeFromSSE;
+
 // Make GET request to Flask SSE endpoint
 axios.get('http://127.0.0.1:4444/check', { responseType: 'stream' })
     .then(response => {
@@ -96,24 +101,23 @@ axios.get('http://127.0.0.1:4444/check', { responseType: 'stream' })
 
 // Route to save recognition data to SQL database
 app.post('/recognize', async (req, res) => {
-  const { empID, status } = req.body;
 
   try {
     // Connect to SQL Server
     const pool = await sql.connect(config);
 
-    // Format the currentTime string into a JavaScript Date object
-    const currentDate = moment().tz('Asia/Jakarta').format(); // Get current time in Indonesia timezone
-
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric'
-    };
+    // Extract the empID and myshift from the request body
+    const { empID } = req.body;
+    console.log("sts: ", myshift);
+    // const options = {
+    //   year: 'numeric',
+    //   month: 'numeric',
+    //   day: 'numeric'
+    // };
 
     // Extract the date and time components separately
     const date = moment().tz('Asia/Jakarta').format('YYYY-MM-DD'); // Extract date component in Indonesia timezone
-    console.log("aaa: ", date);
+    console.log("date: ", date);
     // Convert time string to a JavaScript Date object
     const timeParts = currentTimeFromSSE.split(':');
     const time = moment().tz('Asia/Jakarta').set({ // Convert current time to Indonesia timezone
@@ -121,15 +125,15 @@ app.post('/recognize', async (req, res) => {
       minute: parseInt(timeParts[1], 10),
       second: parseInt(timeParts[2], 10)
     }).format('HH:mm:ss');
-    console.log("aaa: ", time); // Use the stored time variable
+    console.log("time: ", time); // Use the stored time variable
 
     // Execute SQL query to insert recognition data into the database
     await pool.request()
       .input('EmpID', sql.VarChar, empID)
-      .input('status', sql.VarChar, status)
+      .input('myshift', sql.VarChar, myshift)
       .input('date', sql.Date, date) // Insert date component into separate column
       .input('time', sql.VarChar, time) // Insert time component into separate column
-      .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@empID, @status, @date, @time)');
+      .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@empID, @myshift, @date, @time)');
 
     res.send('Recognition data saved successfully');
   } catch (error) {
