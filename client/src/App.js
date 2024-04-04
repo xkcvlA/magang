@@ -93,7 +93,7 @@ function App() {
       }
 
       // Check if the EmpID has changed or it's the first recognition
-      if (empID !== 'Unknown' && empID !== lastEmpID && Date.now() - lastRecognitionTime >= 2000) {
+      if (empID !== 'Unknown' && (empID !== lastEmpID || Date.now() - lastRecognitionTime >= 10000)) {
         try {
           // Send recognition data to Express.js backend
           const response = await axios.post('http://localhost:8080/recognize', { empID, status, currentDate, currentTime });
