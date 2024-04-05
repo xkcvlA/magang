@@ -206,16 +206,16 @@ function App() {
             )}
           </div>
           <div className='body-4'>
-            <div className='phil-cont'>
+            {/* <div className='phil-cont'>
               <h2 className='phil-title'>Our Philosophy</h2>
               <img className='p-photo' src={phil} alt='philosophy' />
             </div>
             <div className='mission'>
               <h2 className='phil-title'>Our Corporate Mission</h2>
               <p>We will continue to explore and develop our original Monozukuri(*) <br />and thereby contribute to the global society by providing trusted and <br />attractive products.</p>
-              {/* <button onClick={() => handleRecognition('check-in')}>Check In</button>
-              <button onClick={() => handleRecognition('check-out')}>Check Out</button> */}
-            </div>
+              <button onClick={() => handleRecognition('check-in')}>Check In</button>
+              <button onClick={() => handleRecognition('check-out')}>Check Out</button>
+            </div> */}
           </div>
         </div>
       </div>
