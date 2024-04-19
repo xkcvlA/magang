@@ -3,7 +3,7 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import logo from './logo.png';
 import GFB from './logo-2.png';
-import phil from './philosophy_01.png';
+// import phil from './philosophy_01.png';
 
 function App() {
   const [data, setData] = useState([]);
@@ -12,7 +12,43 @@ function App() {
   const [EmpID, setEmpId] = useState('');
   const [Ctime, setCtime] = useState('');
   const [lastEmpID, setLastEmpID] = useState(''); // Store the last EmpID
+  const [lastStatus, setLastStatus] = useState(''); // Store the last EmpID
   const [lastRecognitionTime, setLastRecognitionTime] = useState(0); // Store the time of last recognition
+  const [quote, setQuote] = useState('');
+
+  // // Function to update the quote daily
+  // const updateQuote = () => {
+  //   // Check if the detected person is not "Unknown"
+  //   if (frnrp !== "Unknown" ) {
+  //     const randomQuote = getRandomQuote();
+  //     setQuote(randomQuote);
+  //   }
+  // };
+
+  // // Function to get a random quote
+  // const getRandomQuote = () => {
+  //   const quotes = [
+  //     "The only way to do great work is to love what you do. - Steve Jobs",
+  //     "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+  //     "Strive not to be a success, but rather to be of value. - Albert Einstein",
+  //     "aaaa",
+  //     "kalau bisa dikerjakan nanti, kenapa harus sekarang ┐('д')┌",
+  //     // Add more quotes here
+  //   ];
+  //   const randomIndex = Math.floor(Math.random() * quotes.length);
+  //   return quotes[randomIndex];
+  // };
+
+  // useEffect(() => {
+  //   // Initial update of the quote
+  //   updateQuote();
+
+  //   // Update quote every 24 hours (86400000 milliseconds)
+  //   const intervalId = setInterval(updateQuote);
+
+  //   // Clean up the interval on component unmount
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   useEffect(() => {
     axios.get('http://localhost:8080/getEmpId')
@@ -42,6 +78,8 @@ function App() {
       const time = nameIndex[1];
       setFrnrp(name);
       setCtime(time);
+      // Call updateQuote when a new person checks in
+      // updateQuote();
     };
 
     return () => {
@@ -79,7 +117,6 @@ function App() {
   // Get the current date and time
   const currentDate = date.toLocaleDateString(undefined, options); // Extract date component
   const currentTime = Ctime; // Extract time component
-  // Assuming you have some recognition result (e.g., employee ID)
   const empID = frnrp; // Replace with actual recognition result
   const selshift = data.find(item => item.EmpID === frnrp)?.shiftID;
 
@@ -105,6 +142,25 @@ function App() {
 
           setLastRecognitionTime(Date.now());
 
+          
+
+          // Function to get a random quote
+          const getRandomQuote = () => {
+            const quotes = [
+              "The only way to do great work is to love what you do. - Steve Jobs",
+              "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+              "Strive not to be a success, but rather to be of value. - Albert Einstein",
+              "aaaa",
+              "kalau bisa dikerjakan nanti, kenapa harus sekarang ┐('д')┌",
+              // Add more quotes here
+            ];
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            return quotes[randomIndex];
+          };
+
+          const randomQuote = getRandomQuote();
+          setQuote(randomQuote);
+
           // Provide feedback to the user (optional)
           // alert('Recognition data saved successfully!');
         } catch (error) {
@@ -125,6 +181,7 @@ function App() {
           const response = await axios.post('http://localhost:8080/checkStatus', { data: selshift });
           console.log('Response from server:', response.data);
           setStatus(response.data);
+          
         } catch (error) {
           console.error('Error checking status:', error);
           setStatus('Error');
@@ -132,95 +189,95 @@ function App() {
       } else {
         setStatus('');
       }
+      console.log(status);
+
+      if (status !== 'Unknown' && status !== '') {
+        setLastStatus(status);
+        console.log('sts: ', lastStatus);
+      };
     };
 
     HandleCheckStatus();
     HandleRecognition();
-  }, [frnrp, data, empID, lastEmpID, lastRecognitionTime, selshift, currentDate, currentTime]);
+  }, [frnrp, data, empID, lastEmpID, lastRecognitionTime, selshift, currentDate, currentTime, lastStatus, status]);
 
   const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
-  const filter = data.find(item => item.EmpID === frnrp);
+  const filter = data.find(item => item.EmpID === lastEmpID);
   const selper = filter ? filter.EmpName : [];
   const selid = filter ? filter.EmpID : [];
   const selfo = selper ? images[`${selper}.png`] : null;
 
-  console.log("tes: ", status)
-  console.log(selper)
-  console.log(selper)
+  // console.log("tes: ", status)
+  // console.log(selper)
+  // console.log(selper)
   return (
     <div className='app'>
-      <div className='app-top'>
-        <div className='logo-container'>
-          <a href='https://musashi.co.in/MusashiPhilosophy'>
-            <img src={logo} alt='logo' className='logo' />
-            <img src={GFB} alt='logo' className='logo-2' />
-          </a>
-        </div>
-        <div className='date-container'>
-          <p className='date'>{date.toLocaleDateString('id-ID', options)}</p>
-        </div>
+    <div className='app-top'>
+      <div className='logo-container'>
+        <a href='https://musashi.co.in/MusashiPhilosophy'>
+          <img src={logo} alt='logo' className='logo' />
+          <img src={GFB} alt='logo' className='logo-2' />
+        </a>
       </div>
-      <div className='body-cont'>
-        <div className='fr-cont'>
-          <p className='time'>{date.toLocaleTimeString()}</p>
-          <div className='camera-cont'>
-            <img src={'http://localhost:4444/video_feed'} alt="cam" className='camera' />
-          </div>
-          <p className='text'>Arahkan muka anda ke kamera</p>
-        </div>
+      <div className='date-container'>
+        <p className='date'>{date.toLocaleDateString('id-ID', options)}</p>
       </div>
-      <div className='body-cont2'>
-        <div className='body-3'>
-          {selfo ? (
-            <div className='foto'>
-              <img src={selfo} alt={selper} className='foto' />
-            </div>
-          ) : (
-              <div className='foto placeholder'></div>
-            )}
-          <div className='body-8'>
-            <div className='body-7'>
-              <div className='id' style={{ display: 'flex', flexDirection: 'column' }}>
-                <h2 style={{ flex: 1 }}>Nama:</h2>
-                <h2 style={{ flex: 1 }}>NRP:</h2>
-                <h2 style={{ flex: 1 }}>Status:</h2>
-              </div>
-              <div className='data' style={{ display: 'flex', flexDirection: 'column', fontSize: '15px', marginLeft: '15px' }}>
-                <h2 style={{ flex: 1 }}>{selper || ''}</h2>
-                <h2 style={{ flex: 1 }}>{selid || ''}</h2>
-                <h2 style={{ flex: 1 }}>{status || ''}</h2>
-              </div>
-            </div>
-            {status === "Check in" && (
-              <div className="check-in">
-                <p className='check'>Welcome, {selper}!</p>
-              </div>
-            )}
-            {status === "Check out" && (
-              <div className="check-out">
-                <p className='check'>Thank you, {selper}!</p>
-              </div>
-            )}
-            {status === "" && (
-              <div className='status placeholder'></div>
-            )}
+    </div>
+    <div className='body-cont'>
+      <div className='fr-cont'>
+        <p className='time'>{date.toLocaleTimeString()}</p>
+        <div className='camera-cont'>
+          <img src={'http://localhost:4444/video_feed'} alt="cam" className='camera' />
+        </div>
+        <p className='text'>Arahkan muka anda ke kamera</p>
+      </div>
+    </div>
+    <div className='body-cont2'>
+      <div className='body-3'>
+        {selfo ? (
+          <div className='foto'>
+            <img src={selfo} alt={selper} className='foto' />
           </div>
-          <div className='body-4'>
-            <div className='phil-cont'>
-              <h2 className='phil-title'>Our Philosophy</h2>
-              <img className='p-photo' src={phil} alt='philosophy' />
+        ) : (
+            <div className='foto placeholder'></div>
+          )}
+        <div className='body-8'>
+          <div className='body-7'>
+            <div className='id' style={{ display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ flex: 1 }}>Nama:</h2>
+              <h2 style={{ flex: 1 }}>NRP:</h2>
+              <h2 style={{ flex: 1 }}>Status:</h2>
             </div>
-            <div className='mission'>
-              <h2 className='phil-title'>Our Corporate Mission</h2>
-              <p>We will continue to explore and develop our original Monozukuri(*) <br />and thereby contribute to the global society by providing trusted and <br />attractive products.</p>
-              {/* <button onClick={() => handleRecognition('check-in')}>Check In</button>
-              <button onClick={() => handleRecognition('check-out')}>Check Out</button> */}
+            <div className='data' style={{ display: 'flex', flexDirection: 'column', fontSize: '15px', marginLeft: '15px' }}>
+              <h2 style={{ flex: 1 }}>{selper || ''}</h2>
+              <h2 style={{ flex: 1 }}>{selid || ''}</h2>
+              <h2 style={{ flex: 1 }}>{lastStatus || ''}</h2>
             </div>
+          </div>
+          {lastStatus === "Check in" && (
+            <div className="check-in">
+              <p className='check'>Welcome, {selper}!</p>
+            </div>
+          )}
+          {lastStatus === "Check out" && (
+            <div className="check-out">
+              <p className='check'>Thank you, {selper}!</p>
+            </div>
+          )}
+          {lastStatus === "" && (
+            <div className='status placeholder'></div>
+          )}
+        </div>
+        <div className='body-4'>
+          <div>
+            <h2>Daily Quote</h2>
+            <blockquote>{quote}</blockquote>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
