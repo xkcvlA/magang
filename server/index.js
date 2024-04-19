@@ -85,7 +85,7 @@ axios.get('http://127.0.0.1:4444/check', { responseType: 'stream' })
             const nameIndex = data.split(" , "); 
             const time = nameIndex[1];
             currentTimeFromSSE = time;
-            // console.log('Received SSE data:', time);
+            console.log('Received SSE data:', time);
             // Process the SSE data as needed
         });
 
