@@ -107,15 +107,15 @@ function App() {
 
           setLastRecognitionTime(Date.now());
 
-          
-
           // Function to get a random quote
           const getRandomQuote = () => {
             const quotes = [
-              "The only way to do great work is to love what you do. - Steve Jobs",
-              "Innovation distinguishes between a leader and a follower. - Steve Jobs",
-              "Strive not to be a success, but rather to be of value. - Albert Einstein",
-              "aaaa",
+              "kenapa kalau makan kepiting gaboleh pake gunting? karena nanti jadi kepotong",
+              "shock dikit, sisanya syik syak syok",
+              "sotong kalo kebelah jadi apa? sotongah",
+              "kelapa apa yang berat? kelapa keluarga",
+              "motor apa yg selalu senang? YamaHahahahaha",
+              "tukang apa yang suka mengkhayal? tukang bubur, karena suka menghalusi-nasi",
               "kalau bisa dikerjakan nanti, kenapa harus sekarang ┐('д')┌",
               // Add more quotes here
             ];
@@ -235,7 +235,7 @@ function App() {
         </div>
         <div className='body-4'>
           <div>
-            <h2>Daily Quote</h2>
+            <h2>Daily Jokes</h2>
             <blockquote>{quote}</blockquote>
           </div>
         </div>
