@@ -45,8 +45,6 @@ function App() {
       const time = nameIndex[1];
       setFrnrp(name);
       setCtime(time);
-      // Call updateQuote when a new person checks in
-      // updateQuote();
     };
 
     return () => {
