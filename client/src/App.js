@@ -16,39 +16,6 @@ function App() {
   const [lastRecognitionTime, setLastRecognitionTime] = useState(0); // Store the time of last recognition
   const [quote, setQuote] = useState('');
 
-  // // Function to update the quote daily
-  // const updateQuote = () => {
-  //   // Check if the detected person is not "Unknown"
-  //   if (frnrp !== "Unknown" ) {
-  //     const randomQuote = getRandomQuote();
-  //     setQuote(randomQuote);
-  //   }
-  // };
-
-  // // Function to get a random quote
-  // const getRandomQuote = () => {
-  //   const quotes = [
-  //     "The only way to do great work is to love what you do. - Steve Jobs",
-  //     "Innovation distinguishes between a leader and a follower. - Steve Jobs",
-  //     "Strive not to be a success, but rather to be of value. - Albert Einstein",
-  //     "aaaa",
-  //     "kalau bisa dikerjakan nanti, kenapa harus sekarang ┐('д')┌",
-  //     // Add more quotes here
-  //   ];
-  //   const randomIndex = Math.floor(Math.random() * quotes.length);
-  //   return quotes[randomIndex];
-  // };
-
-  // useEffect(() => {
-  //   // Initial update of the quote
-  //   updateQuote();
-
-  //   // Update quote every 24 hours (86400000 milliseconds)
-  //   const intervalId = setInterval(updateQuote);
-
-  //   // Clean up the interval on component unmount
-  //   return () => clearInterval(intervalId);
-  // }, []);
 
   useEffect(() => {
     axios.get('http://localhost:8080/getEmpId')
