@@ -188,7 +188,7 @@
   flex-direction: row;
 }
 
-.phil-cont {
+/* .phil-cont {
   width: 25%;
   flex-direction: column;
   margin-left: 20px;
@@ -208,16 +208,27 @@
 }
 
 .p-photo {
-  width: 150px; /* Adjust the width of the image as needed */
+  width: 150px;
   height: auto;
   aspect-ratio: auto;
   align-self: center;
-}
+} */
 
-.mission {
+/* .mission {
   overflow-wrap: break-word;
   word-wrap: break-word;
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
+} */
+
+.jokes {
+  font-size: large;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  align-self: center;
+  /* border-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(162, 159, 159); */
 }
+

@@ -235,8 +235,10 @@ function App() {
         </div>
         <div className='body-4'>
           <div>
-            <h2>Daily Jokes</h2>
-            <blockquote>{quote}</blockquote>
+            <h2 className='jokes'>Daily Jokes</h2>
+            <blockquote className='joke-ins' style={{fontSize: 'medium', textAlign: 'center'}}>
+              {quote}
+            </blockquote>
           </div>
         </div>
       </div>
