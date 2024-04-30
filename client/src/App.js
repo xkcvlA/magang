@@ -14,7 +14,7 @@ function App() {
   const [lastEmpID, setLastEmpID] = useState(''); // Store the last EmpID
   const [lastStatus, setLastStatus] = useState(''); // Store the last EmpID
   const [lastRecognitionTime, setLastRecognitionTime] = useState(0); // Store the time of last recognition
-  const [quote, setQuote] = useState('');
+  const [jokes, setJokes] = useState('');
 
 
   useEffect(() => {
@@ -108,35 +108,28 @@ function App() {
           setLastRecognitionTime(Date.now());
 
           // Function to get a random quote
-          const getRandomQuote = () => {
-            const quotes = [
+          const getRandomJokes = () => {
+            const jokes = [
               "kenapa kalau makan kepiting gaboleh pake gunting? karena nanti jadi kepotong",
-              "shock dikit, sisanya syik syak syok",
               "sotong kalo kebelah jadi apa? sotongah",
               "kelapa apa yang berat? kelapa keluarga",
               "motor apa yg selalu senang? YamaHahahahaha",
               "tukang apa yang suka mengkhayal? tukang bubur, karena suka menghalusi-nasi",
-              "kalau bisa dikerjakan nanti, kenapa harus sekarang ┐('д')┌",
+              "kenapa matahari tenggelam? karena tidak bisa berenang",
               // Add more quotes here
             ];
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            return quotes[randomIndex];
+            const randomIndex = Math.floor(Math.random() * jokes.length);
+            return jokes[randomIndex];
           };
 
-          const randomQuote = getRandomQuote();
-          setQuote(randomQuote);
-
-          // Provide feedback to the user (optional)
-          // alert('Recognition data saved successfully!');
+          const randomJokes = getRandomJokes();
+          setJokes(randomJokes);
         } catch (error) {
           console.error('Error sending recognition data:', error);
-          // Provide feedback to the user (optional)
-          // alert('Error saving recognition data. Please try again later.');
         }
       } else {
         console.log('EmpID is the same within 2 seconds. Skipping recognition.');
 
-        // alert('Same EmpID within 2 seconds');
       }
     };
 
@@ -234,12 +227,10 @@ function App() {
           )}
         </div>
         <div className='body-4'>
-          <div>
-            <h2 className='jokes'>Daily Jokes</h2>
-            <blockquote className='joke-ins' style={{fontSize: 'medium', textAlign: 'center'}}>
-              {quote}
-            </blockquote>
-          </div>
+          <h2 className='jokes'>Ayo tebak-tebakkan sebelum bekerja!</h2>
+          <blockquote className='joke-ins' style={{fontSize: 'medium', textAlign: 'center'}}>
+            {jokes}
+          </blockquote>
         </div>
       </div>
     </div>
