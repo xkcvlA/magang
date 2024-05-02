@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -9,25 +10,24 @@ const moment = require('moment-timezone');
 
 // Configuration for your SQL Server connection
 const config = {
-  user: 'SA',
-  password: 'a.mle_21',
-  server: 'localhost',    // Change this to your SQL Server hostname
-  port: 1433,             // Change this to your SQL Server port
-  database: 'testDB',     // Change this to your database name
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  port: parseInt(process.env.DB_PORT),
+  database: process.env.DB_NAME,
   options: {
-    encrypt: false,       // Change to true if you're using Azure SQL Database
-    trustServerCertificate: false // Change to true if you're using Azure SQL Database
+    encrypt: process.env.DB_ENCRYPT === 'true',
+    trustServerCertificate: process.env.DB_TRUST_CERT === 'true'
   }
 };
 
-var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
-}
+});
 
-app.use(allowCrossDomain);
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -58,6 +58,7 @@ app.post('/checkStatus', async (req, res) => {
     if (req.body.data) {
       const datashift = "shift" + data;
       const theshift = shifts[datashift];
+      console.log("bjsj", datashift);
       myshift = getStatus(theshift);
       res.json(myshift);
     } else {
@@ -68,8 +69,6 @@ app.post('/checkStatus', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-const { Readable } = require('stream');
 
 // Variable to store current time
 let currentTimeFromSSE;
@@ -83,10 +82,7 @@ axios.get('http://127.0.0.1:4444/check', { responseType: 'stream' })
         readableStream.on('data', chunk => {
             const data = chunk.toString('utf8').trim(); // Convert buffer to string and remove whitespace
             const nameIndex = data.split(" , "); 
-            const time = nameIndex[1];
-            currentTimeFromSSE = time;
-            console.log('Received SSE data:', time);
-            // Process the SSE data as needed
+            currentTimeFromSSE = nameIndex[1];
         });
 
         // Event listener for 'end' event
@@ -109,11 +105,6 @@ app.post('/recognize', async (req, res) => {
     // Extract the empID and myshift from the request body
     const { empID } = req.body;
     console.log("sts: ", myshift);
-    // const options = {
-    //   year: 'numeric',
-    //   month: 'numeric',
-    //   day: 'numeric'
-    // };
 
     // Extract the date and time components separately
     const date = moment().tz('Asia/Jakarta').format('YYYY-MM-DD'); // Extract date component in Indonesia timezone
