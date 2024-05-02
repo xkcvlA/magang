@@ -13,7 +13,7 @@ const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   server: process.env.DB_SERVER,
-  port: process.env.DB_PORT,
+  port: parseInt(process.env.DB_PORT),
   database: process.env.DB_NAME,
   options: {
     encrypt: process.env.DB_ENCRYPT === 'true',
@@ -58,6 +58,7 @@ app.post('/checkStatus', async (req, res) => {
     if (req.body.data) {
       const datashift = "shift" + data;
       const theshift = shifts[datashift];
+      console.log("bjsj", datashift);
       myshift = getStatus(theshift);
       res.json(myshift);
     } else {

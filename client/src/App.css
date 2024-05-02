@@ -184,7 +184,7 @@
   height: 25%;
   display: flex;
   align-content: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   flex-direction: row;
 }
 
@@ -222,13 +222,13 @@
   margin-bottom: 20px;
 } */
 
-.jokes {
+/* .jokes {
   font-size: large;
   font-weight: bold;
   color: rgb(0, 0, 0);
   align-self: center;
-  /* border-width: 2px;
+  border-width: 2px;
   border-bottom-style: solid;
-  border-bottom-color: rgb(162, 159, 159); */
-}
+  border-bottom-color: rgb(162, 159, 159);
+} */
 

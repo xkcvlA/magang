@@ -116,6 +116,7 @@ function App() {
               "motor apa yg selalu senang? YamaHahahahaha",
               "tukang apa yang suka mengkhayal? tukang bubur, karena suka menghalusi-nasi",
               "kenapa matahari tenggelam? karena tidak bisa berenang",
+              "santa claus kalau pake motor, merek apa? Hohohonda"
               // Add more quotes here
             ];
             const randomIndex = Math.floor(Math.random() * jokes.length);
@@ -227,10 +228,10 @@ function App() {
           )}
         </div>
         <div className='body-4'>
-          <h2 className='jokes'>Ayo tebak-tebakkan sebelum bekerja!</h2>
-          <blockquote className='joke-ins' style={{fontSize: 'medium', textAlign: 'center'}}>
-            {jokes}
-          </blockquote>
+        <div>
+            <h2>Daily Jokes</h2>
+            <blockquote>{jokes}</blockquote>
+          </div>
         </div>
       </div>
     </div>
