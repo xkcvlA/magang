@@ -228,7 +228,7 @@ function App() {
           )}
         </div>
         <div className='body-4'>
-        <div>
+          <div>
             <h2>Daily Jokes</h2>
             <blockquote>{jokes}</blockquote>
           </div>
