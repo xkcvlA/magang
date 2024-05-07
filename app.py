@@ -1,7 +1,7 @@
 from flask import Flask, Response
 from flask_cors import CORS
 import cv2
-from recognition_offline import FaceRecognition
+from newmain import FaceRecognition
 import time
 
 app = Flask(__name__)
