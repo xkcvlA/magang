@@ -38,8 +38,7 @@ def test(image, model_dir, device_id):
     image=cv2.resize(image, (int(image.shape[0] * 3/4), image.shape[0]))
     result = check_image(image)
     if result is False:
-        return 2
-    
+        return
     image_bbox = model_test.get_bbox(image)
     prediction = np.zeros((1, 3))
     test_speed = 0
@@ -56,18 +55,10 @@ def test(image, model_dir, device_id):
         }
         if scale is None:
             param["crop"] = False
-
         img = image_cropper.crop(**param)
         start = time.time()
         prediction += model_test.predict(img, os.path.join(model_dir, model_name))
         test_speed += time.time()-start
-
-        # Determine the label based on the prediction
-        label = np.argmax(prediction)
-        if label == 0:
-            return 0  # Return 0 to indicate a spoofed face
-        else:
-            return 1  # Return 1 to indicate a real face
 
     # draw result of prediction
     label = np.argmax(prediction)

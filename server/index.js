@@ -59,10 +59,15 @@ app.post('/recognize', async (req, res) => {
     console.log('Processing request...');
 
     const checkInQuery = `
-      SELECT TOP 1 * FROM ShiftAct 
-        WHERE EmpID = @EmpID 
+    SELECT TOP 1  
+        CONVERT(varchar, date, 23) AS date,
+        CONVERT(varchar, time, 108) AS time,
+        EmpID,
+        status
+    FROM ShiftAct 
+    WHERE EmpID = @EmpID 
         AND status = 'check in' 
-      ORDER BY date DESC
+    ORDER BY date DESC, time DESC
     `;
 
     // Connect to SQL Server
@@ -81,37 +86,43 @@ app.post('/recognize', async (req, res) => {
       .input('EmpID', sql.VarChar, empID)
       .query(checkInQuery);
 
+
     if (checkInResult.recordset.length > 0) {
       console.log(`A "check in" record already exists for employee ID: ${empID}`);
+      const firstRow = checkInResult.recordset[0];
+      const lastCheckInTimestamp = moment(`${firstRow.date} ${firstRow.time}`, 'YYYY-MM-DD HH:mm:ss').tz('Asia/Jakarta');
+      console.log('date: ', currentDate);
+      console.log('time-last: ', lastCheckInTimestamp);
 
-      const lastCheckInTimestamp = moment(checkInResult.recordset[0].date + ' ' + checkInResult.recordset[0].time).tz('Asia/Jakarta');
-      if (currentDate.diff(lastCheckInTimestamp, 'hours') >= 1) {
-        const insertCheckOutQuery = `
+      if (currentDate.diff(lastCheckInTimestamp, 'minutes') >2){
+        const insertCheckInQuery = `
           INSERT INTO ShiftAct (EmpID, status, date, time) 
-          VALUES (@EmpID, 'check out', @CurrentDate, @CurrentTime)
+          VALUES (@EmpID, 'check in', @CurrentDate, @CurrentTime)
         `;
         await pool.request()
           .input('EmpID', sql.VarChar, empID)
           .input('CurrentDate', sql.DateTime, currentDateTime)
-          .input('CurrentTime', sql.VarChar, currentTime)
-          .query(insertCheckOutQuery);
-  
-        return res.send('check out');
-      } else {
-        if (currentDate.diff(lastCheckInTimestamp, 'hours') >= 18) {
-          const insertCheckInQuery = `
-            INSERT INTO ShiftAct (EmpID, status, date, time) 
-            VALUES (@EmpID, 'check in', @CurrentDate, @CurrentTime)
-          `;
+          .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
+          .query(insertCheckInQuery);
+
+          console.log("kont", currentDate.diff(lastCheckInTimestamp, 'minutes'))
+
+        return res.send('check in');
+      } else if (currentDate.diff(lastCheckInTimestamp, 'minutes') > 1 && currentDate.diff(lastCheckInTimestamp, 'minutes')<=2) {
+          // Insert check out record
+          console.log("ol", currentDate.diff(lastCheckInTimestamp, 'minutes'))
+          const insertCheckOutQuery = `
+          INSERT INTO ShiftAct (EmpID, status, date, time) 
+          VALUES (@EmpID, 'check out', @CurrentDate, @CurrentTime)
+        `;
           await pool.request()
             .input('EmpID', sql.VarChar, empID)
             .input('CurrentDate', sql.DateTime, currentDateTime)
-            .query(insertCheckInQuery);
-    
-          return res.send('check in');
-        } else {
-            return res.send('alrd checked in');
-          }
+            .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
+            .query(insertCheckOutQuery);
+          return res.send('check out');
+      } else {
+        return res.send('gk bs check out'); // Too soon for check out
       }
     } else {
       // Insert new "check in" record
@@ -122,7 +133,7 @@ app.post('/recognize', async (req, res) => {
       await pool.request()
         .input('EmpID', sql.VarChar, empID)
         .input('CurrentDate', sql.DateTime, currentDateTime)
-        .input('CurrentTime', sql.VarChar, currentTime)
+        .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
         .query(insertCheckInQuery);
 
       console.log(`Check in recorded for employee ID: ${empID}`);

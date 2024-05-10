@@ -72,7 +72,7 @@ function App() {
           setLastEmpID(empID);
           setLastRecognitionTime(Date.now());
 
-          console.log("djsfhl", Status);
+          console.log("djsfhl: ", Status);
           const getRandomJokes = () => {
             const jokes = [
               "kenapa kalau makan kepiting gaboleh pake gunting? karena nanti jadi kepotong",
@@ -161,6 +161,11 @@ function App() {
             {Status === "alrd checked in" && (
               <div className="udh-check">
                 <p className='check'>udh check in syg *lov*</p>
+              </div>
+            )}
+            {Status === "gk bs check out" && (
+              <div className="udh-check">
+                <p className='check'>hayo mau kabur kmn?</p>
               </div>
             )}
             {Status === "" && (
