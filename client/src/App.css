@@ -173,6 +173,15 @@
   align-self: center;
 }
 
+.udh-check {
+  background-color: pink;
+  border-color: pink;
+  padding: 5px;
+  margin-top: 5px;
+  width: 50%;
+  align-self: center;
+}
+
 .check {
   font-weight: bold;
   font-size: 15px;

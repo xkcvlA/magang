@@ -4,8 +4,6 @@ const app = express();
 const cors = require('cors');
 const sql = require('mssql');
 const bodyParser = require('body-parser');
-const { shifts, getStatus } = require('./shifts');
-const axios = require('axios');
 const moment = require('moment-timezone');
 
 // Configuration for your SQL Server connection
@@ -22,16 +20,15 @@ const config = {
 };
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+  
 app.use(cors());
 app.use(bodyParser.json());
 
-// Define a route to fetch data from the SQL table and send it as JSON
 app.get('/getData', async (req, res) => {
   try {
     // Connect to SQL Server
@@ -48,93 +45,112 @@ app.get('/getData', async (req, res) => {
   }
 });
 
-let myshift;
-// Route to check status
-app.post('/checkStatus', async (req, res) => {
-  try {
-    const { data } = req.body;
-    console.log('Received data:', data);
+let isProcessing = false; // Flag to indicate if processing is ongoing
 
-    if (req.body.data) {
-      const datashift = "shift" + data;
-      const theshift = shifts[datashift];
-      console.log("bjsj", datashift);
-      myshift = getStatus(theshift);
-      res.json(myshift);
-    } else {
-      res.status(400).json({ error: 'Data not provided' });
-    }
-  } catch (error) {
-    console.error('Error checking status:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// Variable to store current time
-let currentTimeFromSSE;
-
-// Make GET request to Flask SSE endpoint
-axios.get('http://127.0.0.1:4444/check', { responseType: 'stream' })
-    .then(response => {
-        const readableStream = response.data;
-
-        // Event listener for 'data' event
-        readableStream.on('data', chunk => {
-            const data = chunk.toString('utf8').trim(); // Convert buffer to string and remove whitespace
-            const nameIndex = data.split(" , "); 
-            currentTimeFromSSE = nameIndex[1];
-        });
-
-        // Event listener for 'end' event
-        readableStream.on('end', () => {
-            console.log('End of SSE stream');
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching SSE data from Flask:', error);
-        // Handle errors as needed
-    });
-
-// Route to save recognition data to SQL database
 app.post('/recognize', async (req, res) => {
+  if (isProcessing) {
+    console.log('Another request is already being processed. Please try again later.');
+    return res.status(409).send('Another request is already being processed. Please try again later.');
+  }
 
   try {
+    isProcessing = true; // Set processing flag to true
+
+    console.log('Processing request...');
+
+    const checkInQuery = `
+    SELECT TOP 1  
+        CONVERT(varchar, date, 23) AS date,
+        CONVERT(varchar, time, 108) AS time,
+        EmpID,
+        status
+    FROM ShiftAct 
+    WHERE EmpID = @EmpID 
+        AND status = 'check in' 
+    ORDER BY date DESC, time DESC
+    `;
+
     // Connect to SQL Server
     const pool = await sql.connect(config);
 
-    // Extract the empID and myshift from the request body
+    // Extract the empID from the request body
     const { empID } = req.body;
-    console.log("sts: ", myshift);
 
-    // Extract the date and time components separately
-    const date = moment().tz('Asia/Jakarta').format('YYYY-MM-DD'); // Extract date component in Indonesia timezone
-    console.log("date: ", date);
-    // Convert time string to a JavaScript Date object
-    const timeParts = currentTimeFromSSE.split(':');
-    const time = moment().tz('Asia/Jakarta').set({ // Convert current time to Indonesia timezone
-      hour: parseInt(timeParts[0], 10),
-      minute: parseInt(timeParts[1], 10),
-      second: parseInt(timeParts[2], 10)
-    }).format('HH:mm:ss');
-    console.log("time: ", time); // Use the stored time variable
+    // Get the current date and time
+    const currentDate = moment().tz('Asia/Jakarta');
+    const currentTime = currentDate.format('HH:mm:ss');
+    const currentDateTime = currentDate.format('YYYY-MM-DD HH:mm:ss');
+    const diffHours = Math.abs(currentDate.diff(lastCheckInTimestamp, 'hours'));
 
-    // Execute SQL query to insert recognition data into the database
-    await pool.request()
+    // Check for existing "check in" record
+    const checkInResult = await pool.request()
       .input('EmpID', sql.VarChar, empID)
-      .input('myshift', sql.VarChar, myshift)
-      .input('date', sql.Date, date) // Insert date component into separate column
-      .input('time', sql.VarChar, time) // Insert time component into separate column
-      .query('INSERT INTO ShiftAct (EmpID, status, date, time) VALUES (@empID, @myshift, @date, @time)');
+      .query(checkInQuery);
 
-    res.send('Recognition data saved successfully');
+
+    if (checkInResult.recordset.length > 0) {
+      console.log(`A "check in" record already exists for employee ID: ${empID}`);
+      const firstRow = checkInResult.recordset[0];
+      const lastCheckInTimestamp = moment(`${firstRow.date} ${firstRow.time}`, 'YYYY-MM-DD HH:mm:ss').tz('Asia/Jakarta');
+      console.log('date: ', currentDate);
+      console.log('time-last: ', lastCheckInTimestamp);
+
+      if (diffHours >2){
+        const insertCheckInQuery = `
+          INSERT INTO ShiftAct (EmpID, status, date, time) 
+          VALUES (@EmpID, 'check in', @CurrentDate, @CurrentTime)
+        `;
+        await pool.request()
+          .input('EmpID', sql.VarChar, empID)
+          .input('CurrentDate', sql.DateTime, currentDateTime)
+          .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
+          .query(insertCheckInQuery);
+
+          console.log("kont", diffHours)
+
+        return res.send('check in');
+      } else if (diffHours > 1 && diffHours <=2) {
+          // Insert check out record
+          console.log("ol", diffHours)
+          const insertCheckOutQuery = `
+          INSERT INTO ShiftAct (EmpID, status, date, time) 
+          VALUES (@EmpID, 'check out', @CurrentDate, @CurrentTime)
+        `;
+          await pool.request()
+            .input('EmpID', sql.VarChar, empID)
+            .input('CurrentDate', sql.DateTime, currentDateTime)
+            .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
+            .query(insertCheckOutQuery);
+          return res.send('check out');
+      } else {
+        return res.send('gk bs check out'); // Too soon for check out
+      }
+    } else {
+      // Insert new "check in" record
+      const insertCheckInQuery = `
+        INSERT INTO ShiftAct (EmpID, status, date, time) 
+        VALUES (@EmpID, 'check in', @CurrentDate, @CurrentTime)
+      `;
+      await pool.request()
+        .input('EmpID', sql.VarChar, empID)
+        .input('CurrentDate', sql.DateTime, currentDateTime)
+        .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
+        .query(insertCheckInQuery);
+
+      console.log(`Check in recorded for employee ID: ${empID}`);
+      return res.send('check in');
+    }
   } catch (error) {
-    console.error('Error saving recognition data:', error);
-    res.status(500).send('Error saving recognition data');
+    console.error('Error processing request:', error);
+    return res.status(500).send('Error processing request');
+  } finally {
+    isProcessing = false; // Reset processing flag
+    console.log('Request processing complete.');
   }
 });
 
-// Start the Express server
+
 const PORT = 8080;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`sever listening on port ${PORT}`);
 });
