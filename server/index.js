@@ -80,6 +80,7 @@ app.post('/recognize', async (req, res) => {
     const currentDate = moment().tz('Asia/Jakarta');
     const currentTime = currentDate.format('HH:mm:ss');
     const currentDateTime = currentDate.format('YYYY-MM-DD HH:mm:ss');
+    const diffHours = Math.abs(currentDate.diff(lastCheckInTimestamp, 'hours'));
 
     // Check for existing "check in" record
     const checkInResult = await pool.request()
@@ -94,7 +95,7 @@ app.post('/recognize', async (req, res) => {
       console.log('date: ', currentDate);
       console.log('time-last: ', lastCheckInTimestamp);
 
-      if (currentDate.diff(lastCheckInTimestamp, 'minutes') >2){
+      if (diffHours >2){
         const insertCheckInQuery = `
           INSERT INTO ShiftAct (EmpID, status, date, time) 
           VALUES (@EmpID, 'check in', @CurrentDate, @CurrentTime)
@@ -105,12 +106,12 @@ app.post('/recognize', async (req, res) => {
           .input('CurrentTime', sql.VarChar, currentTime) // Define CurrentTime input parameter
           .query(insertCheckInQuery);
 
-          console.log("kont", currentDate.diff(lastCheckInTimestamp, 'minutes'))
+          console.log("kont", diffHours)
 
         return res.send('check in');
-      } else if (currentDate.diff(lastCheckInTimestamp, 'minutes') > 1 && currentDate.diff(lastCheckInTimestamp, 'minutes')<=2) {
+      } else if (diffHours > 1 && diffHours <=2) {
           // Insert check out record
-          console.log("ol", currentDate.diff(lastCheckInTimestamp, 'minutes'))
+          console.log("ol", diffHours)
           const insertCheckOutQuery = `
           INSERT INTO ShiftAct (EmpID, status, date, time) 
           VALUES (@EmpID, 'check out', @CurrentDate, @CurrentTime)
