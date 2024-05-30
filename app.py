@@ -31,7 +31,7 @@ def stream_data():
 if __name__ == '__main__':
     host = "localhost"
     port = 4444
-    debug = True
+    debug = False
     options = None
 
     app.run(host, port, debug, options)

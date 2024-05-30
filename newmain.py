@@ -111,15 +111,19 @@ class FaceRecognition:
                     cv2.putText(frame, f'{name} ({confidence}%)', (left * 4, bottom * 4 + 20),
                                 cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
                     print(self.face_names)
-                    print('no fakey fakey')
+                    # print('no fakey fakey')
                 
+            
+
+            elif not self.face_encodings:
+                    # self.face_names.append("Unknown")
+                    # print(self.face_names)
+                print("No faces detected in the image", label)
+
             else:
                 print('you teasing me you naughty naughty~~', label)
 
-            if not self.face_encodings:
-                    # self.face_names.append("Unknown")
-                    # print(self.face_names)
-                    print("No faces detected in the image", label)
+
 
             self.process_current_frame = not self.process_current_frame
             yield frame
