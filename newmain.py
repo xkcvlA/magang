@@ -30,6 +30,7 @@ class FaceRecognition:
     process_current_frame = True
     the_name = ""
     current_time = ""
+    spoof = False
 
     def __init__(self):
         self.encode_faces()
@@ -106,6 +107,7 @@ class FaceRecognition:
                     self.face_names.append(f'{name} ({confidence})')
                     self.current_time = time.strftime('%H:%M:%S')
                     self.the_name = name
+                    self.spoof = False
                     cv2.rectangle(frame, (left * 4, top * 4), (right * 4, bottom * 4), (0, 0, 255), 2)
                     # Display the name and confidence
                     cv2.putText(frame, f'{name} ({confidence}%)', (left * 4, bottom * 4 + 20),
@@ -116,12 +118,12 @@ class FaceRecognition:
             
 
             elif not self.face_encodings:
-                    # self.face_names.append("Unknown")
-                    # print(self.face_names)
+                self.spoof = False
                 print("No faces detected in the image", label)
 
             else:
                 print('you teasing me you naughty naughty~~', label)
+                self.spoof = True
 
 
 

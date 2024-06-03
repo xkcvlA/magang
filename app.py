@@ -23,7 +23,7 @@ def video_feed():
 def stream_data():
     def sendstuff():
         while True:
-            yield f"data: {fr.the_name} , {fr.current_time}\n\n"
+            yield f"data: {fr.the_name} , {fr.current_time} . {fr.spoof}\n\n"
             time.sleep(0.1)
             
     return Response(sendstuff(), mimetype='text/event-stream')

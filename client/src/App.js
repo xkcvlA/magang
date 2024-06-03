@@ -12,6 +12,7 @@ function App() {
   const [Status, setStatus] = useState('');
   const [jokes, setJokes] = useState('');
   const [lastRecognitionTime, setLastRecognitionTime] = useState(0);
+  const [spoof, setSpoof] = useState('');
 
   const options = {
     year: 'numeric',
@@ -25,11 +26,14 @@ function App() {
     const eventSource = new EventSource('http://localhost:4444/check');
     eventSource.onmessage = (event) => {
       const dataset = event.data
-      const nameIndex = dataset.split(" , ");
-      const name = nameIndex[0];
-      const time = nameIndex[1];
+      const nameIndex = dataset.split(/ , | \. /);
+      const name = nameIndex[0].trim();
+      const time = nameIndex[1].trim();
+      const yesno = nameIndex[2].trim();
+      console.log(yesno, "yeyyyy");
       setFrnrp(name);
       setCtime(time);
+      setSpoof(yesno);
     };
 
     return () => {
@@ -170,6 +174,12 @@ function App() {
             )}
             {Status === "" && (
               <div className='status placeholder'></div>
+            )}
+            {spoof === "True" && (
+              <div className="udh-check">
+                <p className='check'>faker kau</p>
+              </div>
+
             )}
           </div>
           <div className='body-4'>
