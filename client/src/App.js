@@ -102,8 +102,8 @@ function App() {
   }, [empID, lastEmpID, lastRecognitionTime, currentDate, currentTime, Status]);
   
 
-  const images = importAll(require.context('./faces', false, /\.(jpg|jpeg|png)$/));
-  const filter = data.find(item => item.EmpID === lastEmpID);
+  const images = importAll(require.context('./picture', false, /\.(jpg|jpeg|png)$/));
+  const filter = data.find(item => item.EmpID === parseInt(lastEmpID));
   const selper = filter ? filter.EmpName : '';
   const selid = filter ? filter.EmpID : '';
   const selfo = selper ? images[`${selper}.png`] : null;
