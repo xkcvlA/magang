@@ -7,7 +7,7 @@ import GFB from './logo-2.png';
 function App() {
   const [data, setData] = useState([]);
   const [frnrp, setFrnrp] = useState('');
-  const [Ctime, setCtime] = useState('');
+  // const [Ctime, setCtime] = useState('');
   const [lastEmpID, setLastEmpID] = useState('');
   const [Status, setStatus] = useState('');
   const [jokes, setJokes] = useState('');
@@ -26,13 +26,13 @@ function App() {
     const eventSource = new EventSource('http://localhost:4444/check');
     eventSource.onmessage = (event) => {
       const dataset = event.data
-      const nameIndex = dataset.split(/ , | \. /);
+      const nameIndex = dataset.split(" , ");
       const name = nameIndex[0].trim();
-      const time = nameIndex[1].trim();
-      const yesno = nameIndex[2].trim();
+      // const time = nameIndex[1].trim();
+      const yesno = nameIndex[1].trim();
       console.log(yesno, "yeyyyy");
       setFrnrp(name);
-      setCtime(time);
+      // setCtime(time);
       setSpoof(yesno);
     };
 
@@ -61,15 +61,16 @@ function App() {
       });
   }, []);
 
-  const currentDate = date.toLocaleDateString(undefined, options);
-  const currentTime = Ctime;
+  // const currentDate = date.toLocaleDateString(undefined, options);
+  // const currentTime = Ctime;
   const empID = frnrp;
 
   useEffect(() => {
     const handleRecognition = async () => {
       try {
+        console.log(Date.now() - lastRecognitionTime)
         if (empID && empID !== 'Unknown' && (empID !== lastEmpID || Date.now() - lastRecognitionTime >= 10000)) {
-          const response = await axios.post('http://localhost:8080/recognize', { empID, currentDate, currentTime });
+          const response = await axios.post('http://localhost:8080/recognize', { empID });
           console.log('Data sent successfully:', response.data);
           
           setStatus(response.data);
@@ -99,7 +100,7 @@ function App() {
       }
     };
     handleRecognition();
-  }, [empID, lastEmpID, lastRecognitionTime, currentDate, currentTime, Status]);
+  }, [empID, lastEmpID, lastRecognitionTime, Status]);
   
 
   const images = importAll(require.context('./picture', false, /\.(jpg|jpeg|png)$/));
